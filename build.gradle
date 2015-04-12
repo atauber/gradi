@@ -1,0 +1,65 @@
+apply plugin: 'java'
+apply plugin: 'jacoco'
+
+sourceCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+ext {
+    junitVersion = '4.11'
+    testngVersion = '6.1.1'    
+    assertjVersion = '1.6.1'
+    mockitoVersion = '1.9.5'
+    deltaspikeVersion = '1.1.0'
+    owbVersion = '1.2.6'
+    weldVersion = '2.2.4.Final'
+    cdiVersion = '1.2'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: junitVersion
+    testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion     
+    testCompile group: 'org.mockito', name: 'mockito-all', version: mockitoVersion
+    
+    testCompile group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-api', version: deltaspikeVersion
+    testCompile group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion
+    testCompile group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion
+    //testCompile group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion
+    
+    testCompile group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: owbVersion
+    testCompile group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: owbVersion
+      
+    //testCompile group: 'org.jboss.weld.se', name: 'weld-se', version: weldVersion
+    
+    compile group: 'javax.enterprise', name: 'cdi-api', version: cdiVersion    
+}
+
+test.doFirst {
+    println 'Copy the CDI beans.xml'
+    copy {
+        from 'build/resources/main/META-INF/beans.xml'
+        into 'build/classes/main/META-INF/'
+    }
+
+}
+
+test {
+    jacoco {
+        append = false
+        destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+        classDumpFile = file("$buildDir/jacoco/classpathdumps")
+    }    
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination "${buildDir}/jacocoHtml"
+    }
+}
+
+
