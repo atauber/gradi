@@ -2,6 +2,11 @@ package de.tauber.gradi;
 
 import javax.inject.Inject;
 
+/**
+ * A Math Service that delegates to injected Services
+ * 
+ * @author atauber
+ */
 public class MathService {
 
     @Inject

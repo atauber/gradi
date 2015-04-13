@@ -1,5 +1,11 @@
 package de.tauber.gradi;
 
+/**
+ * A Add Service to inject in Math Service
+ * 
+ * @author atauber
+ *
+ */
 public class AddService {
 
     @Traced

@@ -1,19 +1,32 @@
 package de.tauber.gradi;
 
+import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
+import org.slf4j.Logger;
+
+/**
+ * Implements tracing of classes and methods
+ * 
+ * @author atauber
+ *
+ */
 @Interceptor @Traced
 public class TracedInterceptor {
     
-    @AroundInvoke
+	@Inject
+	private static Logger logger;
+	
+	@AroundInvoke
     public Object logMethodEntry(InvocationContext invocationContext)
             throws Exception {
-        System.out.println("Entering method: "
+        
+		logger.info("Entering method: "
                 + invocationContext.getMethod().getName() + " in class "
                 + invocationContext.getMethod().getDeclaringClass().getName());
-
+		
         return invocationContext.proceed();
     }
 }
