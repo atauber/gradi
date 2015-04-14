@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 
 /**
  * Unit Test for MathService using Deltaspike TestRunner to execute in a CDI
@@ -27,8 +26,6 @@ public class MathServiceCdiTest {
 	@BeforeClass
 	public static void init(){
 		logger.debug("Setting up MathServiceCdiTest");
-		SLF4JBridgeHandler.removeHandlersForRootLogger();
-		SLF4JBridgeHandler.install();
 	}
 	
 	@Inject
