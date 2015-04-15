@@ -1,8 +1,18 @@
 apply plugin: 'java'
-apply plugin: 'jacoco'
+apply plugin: 'maven'
 apply plugin: 'eclipse'
+apply plugin: 'jacoco'
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
+apply plugin: 'jdepend'
+apply plugin: 'checkstyle'
 
 sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+group = 'de.tauber'
+archivesBaseName = 'gradi'
+version = '0.1.0'
+
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 ext {
@@ -22,11 +32,10 @@ repositories {
 }
 
 dependencies {
-
-	//CDI API
-	compile group: 'javax.enterprise', name: 'cdi-api', version: cdiVersion
+    //CDI API
+    compile group: 'javax.enterprise', name: 'cdi-api', version: cdiVersion
 	
-	//Apache Deltaspike CdiCtrl
+    //Apache Deltaspike CdiCtrl
     testCompile group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-api', version: deltaspikeVersion
     testCompile group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion
     
@@ -44,10 +53,10 @@ dependencies {
     testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion     
     testCompile group: 'org.mockito', name: 'mockito-all', version: mockitoVersion
     //Logging with slf4j
-	compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
+    compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
     compile group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
-	
 }
+
 
 test.doFirst {
     println 'Copy the CDI beans.xml'
@@ -58,6 +67,61 @@ test.doFirst {
 
 }
 
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+findbugs {
+    //toolVersion = "2.0.1"
+    sourceSets = [sourceSets.main]
+    ignoreFailures = true
+    reportsDir = file("$project.buildDir/reports/findbugs")
+    effort = "max"
+    reportLevel = "high"
+    //visitors = ["FindSqlInjection", "SwitchFallthrough"]
+    //omitVisitors = ["FindNonShortCircuit"]
+    //includeFilter = file("$rootProject.projectDir/config/findbugs/includeFilter.xml")
+    //excludeFilter = file("$rootProject.projectDir/config/findbugs/excludeFilter.xml")
+}
+
+tasks.withType(Pmd) {
+    reports {
+    	xml.enabled = true
+    	html.enabled = true
+
+    }
+}
+
+pmd {
+    ignoreFailures = true
+    sourceSets = [sourceSets.main]
+    //ruleSetFiles = rootProject.files('config/pmd/rules.xml')
+    //ruleSets = ["basic","braces"]
+    reportsDir = file("$project.buildDir/reports/pmd")	
+}
+
+tasks.withType(JDepend) {
+    reports {
+        text.enabled = false
+        xml.enabled = true
+        
+    }
+}
+
+jdepend {
+    sourceSets = [sourceSets.main]
+    ignoreFailures = true
+    reportsDir = file("$project.buildDir/reports/jdepend")
+}
+
+checkstyle {
+    configFile = new File(rootDir, "config/checkstyle.xml")
+    ignoreFailures = true
+}
+
 test {
     jacoco {
         append = false
@@ -66,12 +130,22 @@ test {
     }    
 }
 
-jacocoTestReport {
-    reports {
-        xml.enabled false
-        csv.enabled false
-        html.destination "${buildDir}/jacocoHtml"
-    }
+jacoco {
+    reportsDir = file("$project.buildDir/reports/jacoco")
 }
 
-
+jacocoTestReport {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+    reports {
+        xml{
+            enabled true
+            //destination "${buildDir}/reports/jacoco/jacoco.xml"
+        }
+        csv.enabled false
+        html{
+            enabled true
+            //destination "${buildDir}/reports/jacoco"
+        }
+    }
+}
