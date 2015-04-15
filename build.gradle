@@ -80,7 +80,7 @@ task pom << {
                 }
             }
         }
-    }.writeTo("pom.xml")
+    }.writeTo('pom.xml')
 }
 
 tasks.withType(FindBugs) {
@@ -91,16 +91,16 @@ tasks.withType(FindBugs) {
 }
 
 findbugs {
-    //toolVersion = "2.0.1"
+    //toolVersion = '2.0.1'
     sourceSets = [sourceSets.main]
     ignoreFailures = true
     reportsDir = file("$project.buildDir/reports/findbugs")
-    effort = "max"
-    reportLevel = "high"
-    //visitors = ["FindSqlInjection", "SwitchFallthrough"]
-    //omitVisitors = ["FindNonShortCircuit"]
-    //includeFilter = file("$rootProject.projectDir/config/findbugs/includeFilter.xml")
-    //excludeFilter = file("$rootProject.projectDir/config/findbugs/excludeFilter.xml")
+    effort = 'max'
+    reportLevel = 'high'
+    //visitors = ['FindSqlInjection', 'SwitchFallthrough']
+    //omitVisitors = ['FindNonShortCircuit']
+    //includeFilter = file("$project.projectDir/config/findbugs/includeFilter.xml")
+    //excludeFilter = file("$project.projectDir/config/findbugs/excludeFilter.xml")
 }
 
 tasks.withType(Pmd) {
@@ -114,8 +114,8 @@ tasks.withType(Pmd) {
 pmd {
     ignoreFailures = true
     sourceSets = [sourceSets.main]
-    //ruleSetFiles = rootProject.files('config/pmd/rules.xml')
-    //ruleSets = ["basic","braces"]
+    //ruleSetFiles = file("$project.projectDir/config/pmd/rules.xml")
+    //ruleSets = ['basic','braces']
     reportsDir = file("$project.buildDir/reports/pmd")	
 }
 
@@ -134,34 +134,34 @@ jdepend {
 }
 
 checkstyle {
-    configFile = new File(rootDir, "config/checkstyle.xml")
+    configFile = file("$project.projectDir/config/checkstyle.xml")
     ignoreFailures = true
 }
 
 test {
     jacoco {
         append = false
-        destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
-        classDumpFile = file("$buildDir/jacoco/classpathdumps")
+        destinationFile = file("$project.buildDir/jacoco/jacocoTest.exec")
+        classDumpFile = file("$project.buildDir/jacoco/classpathdumps")
     }    
 }
 
 jacoco {
-    reportsDir = file("$project.buildDir/reports/jacoco")
+	reportsDir = file("$project.buildDir/reports/jacoco")
 }
 
 jacocoTestReport {
-    group = "Reporting"
-    description = "Generate Jacoco coverage reports after running tests."
+    group = 'Reporting'
+    description = 'Generate Jacoco coverage reports after running tests.'
     reports {
         xml{
             enabled true
-            //destination "${buildDir}/reports/jacoco/jacoco.xml"
+            destination "${project.buildDir}/reports/jacoco/jacoco.xml"
         }
         csv.enabled false
         html{
             enabled true
-            //destination "${buildDir}/reports/jacoco"
+            destination "${project.buildDir}/reports/jacoco"
         }
     }
 }
