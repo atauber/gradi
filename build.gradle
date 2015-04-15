@@ -12,6 +12,7 @@ targetCompatibility = '1.8'
 group = 'de.tauber'
 archivesBaseName = 'gradi'
 version = '0.1.0'
+println project.name
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -35,14 +36,18 @@ dependencies {
     //CDI API
     compile group: 'javax.enterprise', name: 'cdi-api', version: cdiVersion
 	
+	//Logging with slf4j
+    compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
+	
     //Apache Deltaspike CdiCtrl
     testCompile group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-api', version: deltaspikeVersion
-    testCompile group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion
+    testRuntime group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion
     
     //Apache OpenWebbeans CDI Container
-    testCompile group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion
-    testCompile group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: owbVersion
-    testCompile group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: owbVersion
+    testRuntime group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion
+    testRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: owbVersion
+    testRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: owbVersion
     
     //JBoss Weld CDI Container
     //testCompile group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion
@@ -52,19 +57,30 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: junitVersion
     testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion     
     testCompile group: 'org.mockito', name: 'mockito-all', version: mockitoVersion
-    //Logging with slf4j
-    compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
 }
 
-
+	
 test.doFirst {
     println 'Copy the CDI beans.xml'
     copy {
         from 'build/resources/main/META-INF/beans.xml'
         into 'build/classes/main/META-INF/'
     }
+}
 
+task pom << {
+    pom {
+        project {
+            inceptionYear '2014'
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+    }.writeTo("pom.xml")
 }
 
 tasks.withType(FindBugs) {

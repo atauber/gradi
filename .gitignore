@@ -6,3 +6,4 @@
 /.settings
 /*.log
 /.nb-gradle/private/
+/pom.xml
