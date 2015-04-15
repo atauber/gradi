@@ -17,6 +17,7 @@ targetCompatibility = '1.8'
 group = 'de.tauber'
 archivesBaseName = 'gradi'
 version = '0.1.0'
+description = 'CDI made easy'
 println project.name
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -71,6 +72,16 @@ test.doFirst {
         from 'build/resources/main/META-INF/beans.xml'
         into 'build/classes/main/META-INF/'
     }
+}
+
+// Include a javadoc zip
+task javadocZip(type: Zip, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocZip
 }
 
 task pom << {
