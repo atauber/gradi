@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 public class TracedInterceptor {
     
 	@Inject
-	private static Logger logger;
+	private Logger logger;
 	
 	@AroundInvoke
     public Object logMethodEntry(InvocationContext invocationContext)
