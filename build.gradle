@@ -6,6 +6,11 @@ apply plugin: 'pmd'
 apply plugin: 'findbugs'
 apply plugin: 'jdepend'
 apply plugin: 'checkstyle'
+apply plugin: 'project-report'
+apply plugin: 'distribution'
+apply plugin: 'build-dashboard'
+
+defaultTasks 'build', 'htmlDependencyReport', 'jacocoTestReport'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -92,7 +97,7 @@ tasks.withType(FindBugs) {
 
 findbugs {
     //toolVersion = '2.0.1'
-    sourceSets = [sourceSets.main]
+    //sourceSets = [sourceSets.main]
     ignoreFailures = true
     reportsDir = file("$project.buildDir/reports/findbugs")
     effort = 'max'
@@ -113,7 +118,7 @@ tasks.withType(Pmd) {
 
 pmd {
     ignoreFailures = true
-    sourceSets = [sourceSets.main]
+    //sourceSets = [sourceSets.main]
     //ruleSetFiles = file("$project.projectDir/config/pmd/rules.xml")
     //ruleSets = ['basic','braces']
     reportsDir = file("$project.buildDir/reports/pmd")	
@@ -128,7 +133,7 @@ tasks.withType(JDepend) {
 }
 
 jdepend {
-    sourceSets = [sourceSets.main]
+    //sourceSets = [sourceSets.main]
     ignoreFailures = true
     reportsDir = file("$project.buildDir/reports/jdepend")
 }
@@ -156,12 +161,16 @@ jacocoTestReport {
     reports {
         xml{
             enabled true
-            destination "${project.buildDir}/reports/jacoco/jacoco.xml"
+            //destination "${project.buildDir}/reports/jacoco/jacoco.xml"
         }
         csv.enabled false
         html{
             enabled true
-            destination "${project.buildDir}/reports/jacoco"
+            //destination "${project.buildDir}/reports/jacoco"
         }
     }
+}
+
+htmlDependencyReport {
+	projects = project.allprojects
 }
