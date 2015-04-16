@@ -42,7 +42,7 @@ dependencies {
     //CDI API
     compile group: 'javax.enterprise', name: 'cdi-api', version: cdiVersion
 	
-	//Logging with slf4j
+    //Logging with slf4j
     compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
     compile group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
 	
@@ -101,8 +101,13 @@ task pom << {
 
 tasks.withType(FindBugs) {
     reports {
-        xml.enabled = false
-        html.enabled = true
+        html {
+            enabled true
+        }
+        xml {
+            enabled false
+            xml.withMessages true
+    	}
     }
 }
 
@@ -121,37 +126,70 @@ findbugs {
 
 tasks.withType(Pmd) {
     reports {
-    	xml.enabled = true
-    	html.enabled = true
-
+    	html {
+            enabled true
+        }
+        xml {
+            enabled true
+        }
     }
 }
 
 pmd {
     ignoreFailures = true
-    //sourceSets = [sourceSets.main]
-    //ruleSetFiles = file("$project.projectDir/config/pmd/rules.xml")
-    //ruleSets = ['basic','braces']
+    sourceSets = [sourceSets.main,sourceSets.test]
+    //ruleSetFiles = files("$project.projectDir/config/pmd/basic.xml")
+    //ruleSets = ["basic", "braces", "design"]
+    ruleSets = [
+        'java-basic',
+        'java-braces',
+        'java-clone',
+        'java-codesize',
+        'java-comments',
+        'java-controversial',
+        'java-design',
+        'java-empty',
+        'java-finalizers',
+        'java-imports',
+        'java-javabeans',
+        'java-junit',
+        'java-logging-jakarta-commons',
+        'java-logging-java',
+        'java-migrating',
+        'java-naming',
+        'java-optimizations',
+        'java-strictexception',
+        'java-strings',
+        'java-sunsecure',
+        'java-typeresolution',
+        'java-unnecessary',
+        'java-unusedcode'           
+    ]
     reportsDir = file("$project.buildDir/reports/pmd")	
 }
 
 tasks.withType(JDepend) {
     reports {
-        text.enabled = false
-        xml.enabled = true
-        
+        text {
+            enabled true
+        }
+        xml {
+            enabled false
+        }
     }
 }
 
 jdepend {
-    //sourceSets = [sourceSets.main]
     ignoreFailures = true
-    reportsDir = file("$project.buildDir/reports/jdepend")
+    //sourceSets = [sourceSets.main]
+    reportsDir = file("$project.buildDir/reports/jdepend")    
 }
 
 checkstyle {
-    configFile = file("$project.projectDir/config/checkstyle.xml")
     ignoreFailures = true
+    showViolations = false
+    //sourceSets = [sourceSets.main, sourceSets.test]        
+    configFile = file("$project.projectDir/config/checkstyle/checkstyle.xml")
 }
 
 test {
@@ -163,7 +201,7 @@ test {
 }
 
 jacoco {
-	reportsDir = file("$project.buildDir/reports/jacoco")
+    reportsDir = file("$project.buildDir/reports/jacoco")
 }
 
 jacocoTestReport {
@@ -180,8 +218,19 @@ jacocoTestReport {
             //destination "${project.buildDir}/reports/jacoco"
         }
     }
+    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    classDirectories = files(sourceSets.main.output.classesDir)
+
+    //additionalSourceDirs = files(['test/java', 'src/java-test'])
+    //additionalClassDirs = files(['build/jacoco/UT/classpathdumps/com/abc/xyz', 'build/jacoco/IT/classpathdumps/com/abc/xyz'])
+    
+    //sourceDirectories = files('src/main/java')
+    //classDirectories = files('build/classes/main')
+
+    //sourceDirectories = fileTree('src/main/java')
+    //classDirectories = fileTree('build/classes/main')
 }
 
 htmlDependencyReport {
-	projects = project.allprojects
+    projects = project.allprojects
 }
