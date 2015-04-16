@@ -140,6 +140,7 @@ pmd {
     sourceSets = [sourceSets.main,sourceSets.test]
     //ruleSetFiles = files("$project.projectDir/config/pmd/basic.xml")
     //ruleSets = ["basic", "braces", "design"]
+    consoleOutput = false
     ruleSets = [
         'java-basic',
         'java-braces',
@@ -151,14 +152,14 @@ pmd {
         'java-empty',
         'java-finalizers',
         'java-imports',
-        'java-javabeans',
+        //'java-javabeans',
         'java-junit',
         'java-logging-jakarta-commons',
-        'java-logging-java',
+        //'java-logging-java',
         'java-migrating',
         'java-naming',
         'java-optimizations',
-        'java-strictexception',
+        //'java-strictexception',
         'java-strings',
         'java-sunsecure',
         'java-typeresolution',
@@ -190,6 +191,15 @@ checkstyle {
     showViolations = false
     //sourceSets = [sourceSets.main, sourceSets.test]        
     configFile = file("$project.projectDir/config/checkstyle/checkstyle.xml")
+}
+
+task checkstyleHtml << {
+    ant.xslt(in: checkstyleMain.reports.xml.destination,
+        style: file("$project.projectDir/config/checkstyle/checkstyle-noframes-sorted.xsl"),
+        out: new File(checkstyleMain.reports.xml.destination.parent, 'main.html'))
+    ant.xslt(in: checkstyleTest.reports.xml.destination,
+        style: file("$project.projectDir/config/checkstyle/checkstyle-noframes-sorted.xsl"),
+        out: new File(checkstyleTest.reports.xml.destination.parent, 'test.html'))
 }
 
 test {

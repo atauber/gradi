@@ -13,34 +13,51 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Unit Test for MathService using Deltaspike TestRunner to execute in a CDI
- * environment
- * 
+ * environment.
+ *
  * @author atauber
- * 
+ *
  */
 @RunWith(CdiTestRunner.class)
 public class MathServiceCdiTest {
 
-	private static Logger logger = LoggerFactory.getLogger(MathServiceMockitoTest.class);
-	
-	@BeforeClass
-	public static void init(){
-		logger.debug("Setting up MathServiceCdiTest");
-	}
-	
-	@Inject
-	private MathService math;
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(MathServiceMockitoTest.class);
 
-	@Test
-	public void testAdding() {
-		int result = math.adding(4, 4);
-		assertThat(result).isEqualTo(8);
-	}
+    /**
+     * Setup test.
+     */
+    @BeforeClass
+    public static void init() {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Setting up MathServiceCdiTest");
+        }
+    }
 
-	@Test
-	public void testSubstracting() {
-		int result = math.substracting(4, 4);
-		assertThat(result).isEqualTo(0);
-	}
+    /**
+     * Injects the math service.
+     */
+    @Inject
+    private MathService math;
+
+    /**
+     * Simple test for MathService adding method.
+     */
+    @Test
+    public void testAdding() {
+        final int result = math.adding(4, 4);
+        assertThat(result).isEqualTo(8);
+    }
+
+    /**
+     * Simple test for MathService substracting method.
+     */
+    @Test
+    public void testSubstracting() {
+        final int result = math.substracting(4, 4);
+        assertThat(result).isEqualTo(0);
+    }
 
 }

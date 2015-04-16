@@ -16,61 +16,96 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Unit Test for MathService using Mockito mocks to configure and verify
- * dependent objects
- * 
+ * dependent objects.
+ *
  * @author atauber
  *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class MathServiceMockitoTest {
 
-	private static Logger logger = LoggerFactory.getLogger(MathServiceMockitoTest.class);
-	
-    @Mock AddService add;
-            
-    @Mock SubstractService substract;
-    
-    @InjectMocks MathService math;
-    
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(MathServiceMockitoTest.class);
+
+    /**
+     * Mock for AddService.
+     */
+    @Mock
+    private AddService add;
+
+    /**
+     * Mock for SubstractService.
+     */
+    @Mock
+    private SubstractService substract;
+
+    /**
+     * Inject the Mocks into MathService.
+     */
+    @InjectMocks
+    private MathService math;
+
+    /**
+     * 4711.
+     */
+    private static final int CONST4711 = 4711;
+
+
+    /**
+     * Setting up the test.
+     */
     @BeforeClass
-    public static void setup(){
-    	logger.info("Setting up MathServiceMockitoTest");
+    public static void init() {
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Setting up MathServiceMockitoTest");
+        }
     }
-    
+
+    /**
+     * We use the mock for AddService.
+     */
     @Test
-    public void testAdding(){
-    	//Setup
-    	when(add.add(anyInt(), anyInt())).thenReturn(4711);
-    	//Execute
-    	int result = math.adding(2, 2);
-    	//Verify
-    	assertThat(result).isEqualTo(4711);
+    public void testAdding() {
+        //Setup
+        when(add.add(anyInt(), anyInt())).thenReturn(CONST4711);
+        //Execute
+        final int result = math.adding(2, 2);
+        //Verify
+        assertThat(result).isEqualTo(CONST4711);
         verify(add).add(2, 2);
     }
-    
+
+    /**
+     * We use the mock for SubstractService.
+     */
     @Test
-    public void testSubstract(){
-    	//Setup
-    	when(substract.substract(anyInt(), anyInt())).thenReturn(4711);
-    	//Execute
-    	int result = substract.substract(2, 2);
-    	//Verify
-    	assertThat(result).isEqualTo(4711);
-    	verify(substract).substract(2,2);
-    }
-    
-    @Test
-    public void testCalculate(){
-    	//Setup
-    	when(add.add(anyInt(), anyInt())).thenReturn(4711);
-    	when(substract.substract(anyInt(), anyInt())).thenReturn(4711);
-    	//4711 + 4711 = 9422
+    public void testSubstract() {
+        //Setup
+        when(substract.substract(anyInt(), anyInt())).thenReturn(CONST4711);
         //Execute
-    	int result = math.calculate(2, 2);
+        final int result = substract.substract(2, 2);
+        //Verify
+        assertThat(result).isEqualTo(CONST4711);
+        verify(substract).substract(2, 2);
+    }
+
+    /**
+     * We use the the MathService which uses references to mocked objects.
+     */
+    @Test
+    public void testCalculate() {
+        //Setup
+        when(add.add(anyInt(), anyInt())).thenReturn(CONST4711);
+        when(substract.substract(anyInt(), anyInt())).thenReturn(CONST4711);
+        //4711 + 4711 = 9422
+        //Execute
+        final int result = math.calculate(2, 2);
         assertThat(result).isEqualTo(9422);
         //Verify
         verify(add).add(2, 2);
         verify(substract).substract(2, 2);
     }
-       
+
 }

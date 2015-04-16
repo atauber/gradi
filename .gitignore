@@ -7,3 +7,4 @@
 /*.log
 /.nb-gradle/private/
 /pom.xml
+/.nb-gradle

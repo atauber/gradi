@@ -7,15 +7,22 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 /**
- * A class with CDI producer methods to provide resources for our services :-)
- * 
+ * A class with CDI producer methods to provide resources for our services.
+ *
  * @author atauber
  *
  */
 public class Resources {
 
-    @Produces  
-    public Logger produceLogger(InjectionPoint injectionPoint) {  
-        return LoggerFactory.getLogger(injectionPoint.getMember().getDeclaringClass().getName());  
-    }  
+    /**
+     * Creates Loggers for dependency injection.
+     *
+     * @param injectionPoint point logger is injected
+     * @return logger object
+     */
+    @Produces
+    public final Logger produceLogger(final InjectionPoint injectionPoint) {
+        return LoggerFactory.getLogger(
+                injectionPoint.getMember().getDeclaringClass().getName());
+    }
 }
