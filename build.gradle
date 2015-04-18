@@ -9,29 +9,20 @@ apply plugin: 'checkstyle'
 apply plugin: 'project-report'
 apply plugin: 'distribution'
 apply plugin: 'build-dashboard'
+apply plugin: 'project-report'
 
 defaultTasks 'build', 'htmlDependencyReport', 'jacocoTestReport'
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
-group = 'de.tauber'
-archivesBaseName = 'gradi'
-version = '0.1.0'
-description = 'CDI made easy'
-println project.name
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+println("group: " + group + ", project.name: " + project.name + ", version: " + version)
+println("description: " + description)
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+//extra properties
 ext {
-    cdiVersion = '1.2'
-    deltaspikeVersion = '1.3.0'
-    owbVersion = '1.2.7'
-    weldVersion = '2.2.10.Final'
-    junitVersion = '4.12'
-    assertjVersion = '2.0.0'
-    mockitoVersion = '1.10.19'
-    slf4jVersion = '1.7.12'
-    logbackVersion = '1.1.3'
 }
 
 repositories {
@@ -44,7 +35,7 @@ dependencies {
 	
     //Logging with slf4j
     compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
+    testRuntime group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
 	
     //Apache Deltaspike CdiCtrl
     testCompile group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-api', version: deltaspikeVersion
@@ -65,17 +56,48 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-all', version: mockitoVersion
 }
 
-	
-test.doFirst {
-    println 'Copy the CDI beans.xml'
-    copy {
-        from 'build/resources/main/META-INF/beans.xml'
-        into 'build/classes/main/META-INF/'
+
+//Standard project layout
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java"]
+        }
+        resources {
+            srcDirs = ["src/main/resources"]
+        }
+    }
+    test {
+        java {
+            srcDirs = ["src/test/java"]
+        }
+        resources {
+            srcDirs = ["src/test/resources"]
+        }
+    }	
+}
+
+//Run tests if project has property runTests
+test.onlyIf { project.hasProperty('runTests') }
+
+//Enable/Disable unit tests in build 
+test.enabled = true
+
+//Copy the CDI beans.xml before executing unit tests
+test
+{
+    doFirst {
+        copy {
+            from 'build/resources/main/META-INF/beans.xml'
+            into 'build/classes/main/META-INF/'
+        }
     }
 }
 
-// Include a javadoc zip
+//Include a javadoc zip
 task javadocZip(type: Zip, dependsOn: javadoc) {
+    description 'Generate a javadoc zip file'
+    group = 'Documentation'
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
@@ -84,20 +106,32 @@ artifacts {
     archives javadocZip
 }
 
-task pom << {
-    pom {
-        project {
-            inceptionYear '2014'
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
+//Generate a Maven pom for project
+task pom  {
+    description 'Generates a Maven pom for project'
+    group 'Distribution'
+    doLast{
+        pom {
+            project {
+                inceptionYear '2014'
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
                 }
             }
-        }
-    }.writeTo('pom.xml')
+        }.writeTo('pom.xml')
+    }
 }
+
+//Build a dashboard?
+buildDashboard.onlyIf { project.hasProperty('runChecks') }
+
+//Findbugs configuration
+findbugsMain.onlyIf { project.hasProperty('runChecks') }
+findbugsTest.onlyIf { project.hasProperty('runChecks') }
 
 tasks.withType(FindBugs) {
     reports {
@@ -123,6 +157,10 @@ findbugs {
     //includeFilter = file("$project.projectDir/config/findbugs/includeFilter.xml")
     //excludeFilter = file("$project.projectDir/config/findbugs/excludeFilter.xml")
 }
+
+//PMD Configuration
+pmdMain.onlyIf { project.hasProperty('runChecks') }
+pmdTest.onlyIf { project.hasProperty('runChecks') }
 
 tasks.withType(Pmd) {
     reports {
@@ -169,6 +207,10 @@ pmd {
     reportsDir = file("$project.buildDir/reports/pmd")	
 }
 
+//JDepend configuration
+jdependMain.onlyIf { project.hasProperty('runChecks') }
+jdependTest.onlyIf { project.hasProperty('runChecks') }
+
 tasks.withType(JDepend) {
     reports {
         text {
@@ -186,6 +228,10 @@ jdepend {
     reportsDir = file("$project.buildDir/reports/jdepend")    
 }
 
+//Checkstyle configuration
+checkstyleMain.onlyIf { project.hasProperty('runChecks') }
+checkstyleTest.onlyIf { project.hasProperty('runChecks') }
+
 checkstyle {
     ignoreFailures = true
     showViolations = false
@@ -193,15 +239,22 @@ checkstyle {
     configFile = file("$project.projectDir/config/checkstyle/checkstyle.xml")
 }
 
-task checkstyleHtml << {
-    ant.xslt(in: checkstyleMain.reports.xml.destination,
-        style: file("$project.projectDir/config/checkstyle/checkstyle-noframes-sorted.xsl"),
-        out: new File(checkstyleMain.reports.xml.destination.parent, 'main.html'))
-    ant.xslt(in: checkstyleTest.reports.xml.destination,
-        style: file("$project.projectDir/config/checkstyle/checkstyle-noframes-sorted.xsl"),
-        out: new File(checkstyleTest.reports.xml.destination.parent, 'test.html'))
+//Task to create html pages for checkstyle reports
+task checkstyleHtml {
+    description = 'Generates Checkstyle html reports'
+    group = 'Verification'
+    doLast{
+        ant.xslt(in: checkstyleMain.reports.xml.destination,
+            style: file("$project.projectDir/config/checkstyle/checkstyle-noframes-sorted.xsl"),
+            out: new File(checkstyleMain.reports.xml.destination.parent, 'main.html'))
+        ant.xslt(in: checkstyleTest.reports.xml.destination,
+            style: file("$project.projectDir/config/checkstyle/checkstyle-noframes-sorted.xsl"),
+            out: new File(checkstyleTest.reports.xml.destination.parent, 'test.html'))
+    }
 }
 
+//Jacoco Configuration
+//Generate Java Code Coverage artefacts with tests1
 test {
     jacoco {
         append = false
@@ -215,8 +268,8 @@ jacoco {
 }
 
 jacocoTestReport {
-    group = 'Reporting'
     description = 'Generate Jacoco coverage reports after running tests.'
+    group = 'Reporting'
     reports {
         xml{
             enabled true
@@ -238,9 +291,5 @@ jacocoTestReport {
     //classDirectories = files('build/classes/main')
 
     //sourceDirectories = fileTree('src/main/java')
-    //classDirectories = fileTree('build/classes/main')
-}
-
-htmlDependencyReport {
-    projects = project.allprojects
+    //classDirectories = fileTree('build/classes/main')    
 }
