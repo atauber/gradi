@@ -1,12 +1,12 @@
 package de.tauber.gradi;
 
+import de.tauber.gradi.categories.IntegrationTests;
 import static org.assertj.core.api.Assertions.assertThat;
-
 import javax.inject.Inject;
-
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
  * @author atauber
  *
  */
+@Category(IntegrationTests.class)
 @RunWith(CdiTestRunner.class)
 public class MathServiceCdiTest {
 

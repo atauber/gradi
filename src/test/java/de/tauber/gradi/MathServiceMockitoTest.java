@@ -1,5 +1,6 @@
 package de.tauber.gradi;
 
+import de.tauber.gradi.categories.UnitTests;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
@@ -7,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -21,6 +23,7 @@ import org.slf4j.LoggerFactory;
  * @author atauber
  *
  */
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class MathServiceMockitoTest {
 
