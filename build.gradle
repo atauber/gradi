@@ -83,14 +83,25 @@ test.onlyIf { project.hasProperty('runTests') }
 //Enable/Disable unit tests in build 
 test.enabled = true
 
-//Copy the CDI beans.xml before executing unit tests
+//Configure unit tests
 test
 {
+    //Copy the CDI beans.xml before executing unit tests
     doFirst {
         copy {
             from 'build/resources/main/META-INF/beans.xml'
             into 'build/classes/main/META-INF/'
         }
+    }
+    //Filter the unit tests to run
+    filter {
+        includeTestsMatching "de.tauber.*"
+    }
+    //Include/exclude test categories
+    useJUnit {
+    	includeCategories 'de.tauber.gradi.categories.UnitTests', \
+            'de.tauber.gradi.categories.IntegrationTests'
+    	excludeCategories 'de.tauber.gradi.categories.SmokeTests'
     }
 }
 
@@ -123,6 +134,14 @@ task pom  {
                 }
             }
         }.writeTo('pom.xml')
+    }
+}
+
+task listJarsRuntimeTest {
+	description 'List jars used by test runtime'
+    group 'Information'
+    doLast {
+    	configurations.testRuntime.each { File file -> println file.name }
     }
 }
 
