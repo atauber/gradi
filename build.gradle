@@ -29,6 +29,11 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+	weldTestRuntime
+	owbTestRuntime
+}
+
 dependencies {
     //CDI API
     compile group: 'javax.enterprise', name: 'cdi-api', version: cdiVersion
@@ -42,9 +47,10 @@ dependencies {
     testRuntime group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion
     
     //Apache OpenWebbeans CDI Container
-    testRuntime group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion
-    testRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: owbVersion
-    testRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: owbVersion
+    owbTestRuntime group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion
+    owbTestRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: owbVersion
+    owbTestRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: owbVersion
+    testRuntime configurations.owbTestRuntime 
     
     //JBoss Weld CDI Container
     //testCompile group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion
@@ -75,6 +81,16 @@ sourceSets {
             srcDirs = ["src/test/resources"]
         }
     }	
+}
+
+task listJars << {
+    configurations.compile.each { File file -> println file.name }
+    
+}
+
+task listConfigurations << {
+    configurations.each { Configuration conf -> println conf.name }
+    
 }
 
 //Run tests if project has property runTests
