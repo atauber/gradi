@@ -30,8 +30,17 @@ repositories {
 }
 
 configurations {
-	weldTestRuntime
-	owbTestRuntime
+	weldTestRuntime{
+		description 'Provides weld runtime to tests'
+	}
+	owbTestRuntime{
+		description 'Provides owb runtime to tests'
+	}
+	testRuntime {
+		description 'Customized runtime for unit tests'
+		extendsFrom testCompile, owbTestRuntime
+		//extendsFrom testCompile, weldTestRuntime
+	}
 }
 
 dependencies {
@@ -64,11 +73,7 @@ dependencies {
     weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl-test', version: myfacesVersion
     weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl', version: myfacesVersion
     weldTestRuntime group: 'org.apache.myfaces.test', name: 'myfaces-test22', version: myfacesTest22Version
-    weldTestRuntime group: 'javax.servlet', name: 'javax.servlet-api', version: servletApiVersion
-	
-	//Choose CDI Implemetation for tests
-	testRuntime configurations.owbTestRuntime
-	//testRuntime configurations.weldTestRuntime	   
+    weldTestRuntime group: 'javax.servlet', name: 'javax.servlet-api', version: servletApiVersion		   
 }
 
 
