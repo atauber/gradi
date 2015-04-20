@@ -42,6 +42,11 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
     testRuntime group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
 	
+	//Unit testing
+    testCompile group: 'junit', name: 'junit', version: junitVersion
+    testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion     
+    testCompile group: 'org.mockito', name: 'mockito-all', version: mockitoVersion
+    
     //Apache Deltaspike CdiCtrl
     testCompile group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-api', version: deltaspikeVersion
     testRuntime group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion
@@ -50,16 +55,20 @@ dependencies {
     owbTestRuntime group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion
     owbTestRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: owbVersion
     owbTestRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: owbVersion
-    testRuntime configurations.owbTestRuntime 
     
     //JBoss Weld CDI Container
-    //testCompile group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion
-    //testCompile group: 'org.jboss.weld.se', name: 'weld-se', version: weldVersion
+    weldTestRuntime group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion
+    weldTestRuntime group: 'org.jboss.weld.se', name: 'weld-se', version: weldVersion
     
-    //Unit testing
-    testCompile group: 'junit', name: 'junit', version: junitVersion
-    testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion     
-    testCompile group: 'org.mockito', name: 'mockito-all', version: mockitoVersion
+    //MyFaces + Servlet API needed for clean test run with weld
+    weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl-test', version: myfacesVersion
+    weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl', version: myfacesVersion
+    weldTestRuntime group: 'org.apache.myfaces.test', name: 'myfaces-test22', version: myfacesTest22Version
+    weldTestRuntime group: 'javax.servlet', name: 'javax.servlet-api', version: servletApiVersion
+	
+	//Choose CDI Implemetation for tests
+	testRuntime configurations.owbTestRuntime
+	//testRuntime configurations.weldTestRuntime	   
 }
 
 
@@ -81,16 +90,6 @@ sourceSets {
             srcDirs = ["src/test/resources"]
         }
     }	
-}
-
-task listJars << {
-    configurations.compile.each { File file -> println file.name }
-    
-}
-
-task listConfigurations << {
-    configurations.each { Configuration conf -> println conf.name }
-    
 }
 
 //Run tests if project has property runTests
@@ -328,3 +327,13 @@ jacocoTestReport {
     //sourceDirectories = fileTree('src/main/java')
     //classDirectories = fileTree('build/classes/main')    
 }
+
+task listJars << {
+    configurations.testRuntime.each { File file -> println file.name }
+    
+}
+
+task listConfigurations << {
+    configurations.each { Configuration conf -> println conf.name } 
+}
+
