@@ -30,17 +30,17 @@ repositories {
 }
 
 configurations {
-	weldTestRuntime{
-		description 'Provides weld runtime to tests'
-	}
-	owbTestRuntime{
-		description 'Provides owb runtime to tests'
-	}
-	testRuntime {
-		description 'Customized runtime for unit tests'
-		extendsFrom testCompile, owbTestRuntime
-		//extendsFrom testCompile, weldTestRuntime
-	}
+    weldTestRuntime{
+        description 'Provides weld runtime to tests'
+    }
+    owbTestRuntime{
+        description 'Provides owb runtime to tests'
+    }
+    testRuntime {
+        description 'Customized runtime for unit tests'
+        extendsFrom testCompile, owbTestRuntime
+        //extendsFrom testCompile, weldTestRuntime
+    }
 }
 
 dependencies {
@@ -51,7 +51,7 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
     testRuntime group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
 	
-	//Unit testing
+    //Unit testing
     testCompile group: 'junit', name: 'junit', version: junitVersion
     testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion     
     testCompile group: 'org.mockito', name: 'mockito-all', version: mockitoVersion
@@ -154,14 +154,6 @@ task pom  {
                 }
             }
         }.writeTo('pom.xml')
-    }
-}
-
-task listJarsRuntimeTest {
-	description 'List jars used by test runtime'
-    group 'Information'
-    doLast {
-    	configurations.testRuntime.each { File file -> println file.name }
     }
 }
 
@@ -333,12 +325,24 @@ jacocoTestReport {
     //classDirectories = fileTree('build/classes/main')    
 }
 
-task listJars << {
-    configurations.testRuntime.each { File file -> println file.name }
-    
+
+//Tasks providing project information
+task listConfigurations {
+    description = 'List available gradle Configurations'
+    group = 'Information'
+    configurations.each { conf -> println conf.name } 
 }
 
-task listConfigurations << {
-    configurations.each { Configuration conf -> println conf.name } 
+task listDependencies {
+    description = 'List all dependencies for testRuntime configuration'
+    group = 'Information'
+    configurations.testRuntime.allDependencies.each {
+        dep -> println("" + dep.group + ":" + dep.name + ":" + dep.version)
+    }
 }
 
+task listFilenames {
+    description = 'List filename of jars used by testRuntime'
+    group = 'Information'
+    configurations.testRuntime.files.each { file -> println file.name }    
+}
