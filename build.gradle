@@ -211,7 +211,7 @@ tasks.withType(Pmd) {
 pmd {
     ignoreFailures = true
     sourceSets = [sourceSets.main,sourceSets.test]
-    //ruleSetFiles = files("$project.projectDir/config/pmd/basic.xml")
+    ruleSetFiles = files("$project.projectDir/config/pmd/rulesets/basic.xml")
     //ruleSets = ["basic", "braces", "design"]
     consoleOutput = false
     ruleSets = [
