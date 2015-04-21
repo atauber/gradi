@@ -220,7 +220,7 @@ pmd {
         'java-clone',
         'java-codesize',
         'java-comments',
-        'java-controversial',
+         //'java-controversial',
         'java-design',
         'java-empty',
         'java-finalizers',
@@ -275,7 +275,7 @@ checkstyle {
 }
 
 //Task to create html pages for checkstyle reports
-task checkstyleHtml {
+task checkstyleHtml(dependsOn: ['checkstyleMain', 'checkstyleTest']) {
     description = 'Generates Checkstyle html reports'
     group = 'Verification'
     doLast{
