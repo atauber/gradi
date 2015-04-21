@@ -46,7 +46,11 @@ configurations {
 dependencies {
     //CDI API
     compile group: 'javax.enterprise', name: 'cdi-api', version: cdiVersion
-	
+    
+    //Bean Validation
+    compile group: 'javax.validation', name: 'validation-api', version: beanValidationVersion
+    testRuntime group: 'org.apache.bval', name: 'org.apache.bval.bundle', version: bvalVersion 
+    
     //Logging with slf4j
     compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
     testRuntime group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
@@ -327,13 +331,13 @@ jacocoTestReport {
 
 
 //Tasks providing project information
-task listConfigurations {
+task listConfigurations << {
     description = 'List available gradle Configurations'
     group = 'Information'
     configurations.each { conf -> println conf.name } 
 }
 
-task listDependencies {
+task listDependencies << {
     description = 'List all dependencies for testRuntime configuration'
     group = 'Information'
     configurations.testRuntime.allDependencies.each {
@@ -341,7 +345,7 @@ task listDependencies {
     }
 }
 
-task listFilenames {
+task listFilenames << {
     description = 'List filename of jars used by testRuntime'
     group = 'Information'
     configurations.testRuntime.files.each { file -> println file.name }    
