@@ -190,6 +190,7 @@ findbugs {
     //visitors = ['FindSqlInjection', 'SwitchFallthrough']
     //omitVisitors = ['FindNonShortCircuit']
     //includeFilter = file("$project.projectDir/config/findbugs/includeFilter.xml")
+    //Findbugs exclude filter: Used to define positive falses
     //excludeFilter = file("$project.projectDir/config/findbugs/excludeFilter.xml")
 }
 

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+  This file contains some false positive bugs detected by Findbugs. Their
+  false positive nature has been analyzed individually and they have been
+  put here to instruct Findbugs it must ignore them.
+-->
+<FindBugsFilter>
+
+  <!-- Unchecked cast is deliberate
+  <Match>
+    <Class name="de.tauber.gradle.NotTypeSafe" />
+    <Method name="init" />
+    <Bug code="BC" />
+  </Match>
+  -->
+  
+  <!-- False positive - missing default in switch
+  <Match>
+    <Class name="de.tauber.gradie.NoDefaultSwitch" />
+    <Method name="doit" />
+    <Bug code="SF" />
+  </Match>
+  -->
+
+  <!-- Don't check -->
+  <Match>
+    <Package name="de.tauber.nochecks" />
+  </Match>
+
+</FindBugsFilter>
