@@ -220,7 +220,7 @@ pmd {
         'java-clone',
         'java-codesize',
         'java-comments',
-         //'java-controversial',
+        //'java-controversial',
         'java-design',
         'java-empty',
         'java-finalizers',
@@ -329,12 +329,24 @@ jacocoTestReport {
     //classDirectories = fileTree('build/classes/main')    
 }
 
+task listTasks << {
+    description = 'List available gradle Tasks'
+    group = 'Information'
+    tasks.each { task -> println(task.name + ": " + task.description)}
+}
 
 //Tasks providing project information
 task listConfigurations << {
     description = 'List available gradle Configurations'
     group = 'Information'
     configurations.each { conf -> println conf.name } 
+}
+
+//Tasks providing project information
+task listSourceSets << {
+    description = 'List available gradle SourceSets'
+    group = 'Information'
+    sourceSets.each { ss -> println ss.name } 
 }
 
 task listDependencies << {
