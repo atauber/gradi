@@ -69,9 +69,12 @@ dependencies {
     owbTestRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: owbVersion
     owbTestRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: owbVersion
     
+    //Annotations Api needed with Apache OpenWebBeans 1.5.0
+    owbTestRuntime group: 'javax.annotation', name: 'javax.annotation-api', version: annotationsVersion
+    
     //JBoss Weld CDI Container
     weldTestRuntime group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion
-    weldTestRuntime group: 'org.jboss.weld.se', name: 'weld-se', version: weldVersion
+    weldTestRuntime group: 'org.jboss.weld.se', name: 'weld-se-core', version: weldVersion
     
     //MyFaces + Servlet API needed for clean test run with weld
     weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl-test', version: myfacesVersion
