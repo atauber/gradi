@@ -38,8 +38,8 @@ configurations {
     }
     testRuntime {
         description 'Customized runtime for unit tests'
-        extendsFrom testCompile, owbTestRuntime
-        //extendsFrom testCompile, weldTestRuntime
+        //extendsFrom testCompile, owbTestRuntime
+        extendsFrom testCompile, weldTestRuntime
     }
 }
 
@@ -50,6 +50,7 @@ dependencies {
     //Bean Validation
     compile group: 'javax.validation', name: 'validation-api', version: beanValidationVersion
     testRuntime group: 'org.apache.bval', name: 'org.apache.bval.bundle', version: bvalVersion 
+    testRuntime group: 'org.apache.commons', name: 'commons-lang3', version: commonsLang3Version
     
     //Logging with slf4j
     compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
