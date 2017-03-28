@@ -299,7 +299,7 @@ test {
     jacoco {
         append = false
         destinationFile = file("$project.buildDir/jacoco/jacocoTest.exec")
-        classDumpFile = file("$project.buildDir/jacoco/classpathdumps")
+        classDumpDir = file("$project.buildDir/jacoco/classpathdumps")
     }    
 }
 
@@ -334,36 +334,47 @@ jacocoTestReport {
     //classDirectories = fileTree('build/classes/main')    
 }
 
-task listTasks << {
-    description = 'List available gradle Tasks'
-    group = 'Information'
-    tasks.each { task -> println(task.name + ": " + task.description)}
-}
-
-//Tasks providing project information
-task listConfigurations << {
-    description = 'List available gradle Configurations'
-    group = 'Information'
-    configurations.each { conf -> println conf.name } 
-}
-
-//Tasks providing project information
-task listSourceSets << {
-    description = 'List available gradle SourceSets'
-    group = 'Information'
-    sourceSets.each { ss -> println ss.name } 
-}
-
-task listDependencies << {
-    description = 'List all dependencies for testRuntime configuration'
-    group = 'Information'
-    configurations.testRuntime.allDependencies.each {
-        dep -> println("" + dep.group + ":" + dep.name + ":" + dep.version)
+task listTasks {
+    doLast {
+        description = 'List available gradle Tasks'
+        group = 'Information'
+        tasks.each { task -> println(task.name + ": " + task.description)}
     }
 }
 
-task listFilenames << {
-    description = 'List filename of jars used by testRuntime'
-    group = 'Information'
-    configurations.testRuntime.files.each { file -> println file.name }    
+//Tasks providing project information
+task listConfigurations  {
+    doLast {
+        description = 'List available gradle Configurations'
+        group = 'Information'
+        configurations.each { conf -> println conf.name }
+    
+    } 
+}
+
+//Tasks providing project information
+task listSourceSets {
+    doLast {
+        description = 'List available gradle SourceSets'
+        group = 'Information'
+        sourceSets.each { ss -> println ss.name }
+    } 
+}
+
+task listDependencies {
+    doLast {
+        description = 'List all dependencies for testRuntime configuration'
+        group = 'Information'
+        configurations.testRuntime.allDependencies.each {
+            dep -> println("" + dep.group + ":" + dep.name + ":" + dep.version)
+        }
+    }
+}
+
+task listFilenames {
+    doLast {
+        description = 'List filename of jars used by testRuntime'
+        group = 'Information'
+        configurations.testRuntime.files.each { file -> println file.name }
+    }
 }
