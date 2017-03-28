@@ -35,6 +35,12 @@ public class PersonBeanValidationTest {
             .getLogger(PersonBeanValidationTest.class);
 
     /**
+     * Injects the math service.
+     */
+    @Inject
+    private Validator validator;
+    
+    /**
      * Setup test.
      */
     @BeforeClass
@@ -43,12 +49,6 @@ public class PersonBeanValidationTest {
             LOGGER.debug("Setting up PersonBeanValidationTest");
         }
     }
-
-    /**
-     * Injects the math service.
-     */
-    @Inject
-    private Validator validator;
 
     /**
      * A simple test for a person.

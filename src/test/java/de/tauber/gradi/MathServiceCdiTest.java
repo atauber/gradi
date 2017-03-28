@@ -27,6 +27,12 @@ public class MathServiceCdiTest {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(MathServiceMockitoTest.class);
 
+     /**
+     * Injects the math service.
+     */
+    @Inject
+    private MathService math;
+
     /**
      * Setup test.
      */
@@ -36,12 +42,6 @@ public class MathServiceCdiTest {
             LOGGER.debug("Setting up MathServiceCdiTest");
         }
     }
-
-    /**
-     * Injects the math service.
-     */
-    @Inject
-    private MathService math;
 
     /**
      * Simple test for MathService adding method.
