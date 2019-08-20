@@ -1,10 +1,13 @@
 package de.tauber.gradi;
 
+import javax.enterprise.context.Dependent;
+
 /**
  * A Substract Service to inject in Math Service.
  *
  * @author atauber
  */
+@Dependent
 public class SubstractService {
 
     /**

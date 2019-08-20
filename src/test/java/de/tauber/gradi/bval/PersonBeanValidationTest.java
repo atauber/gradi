@@ -22,7 +22,6 @@ import de.tauber.gradi.categories.IntegrationTests;
  * Unit Test using BeanValidation to test a person object.
  *
  * @author atauber
- *
  */
 @Category(IntegrationTests.class)
 @RunWith(CdiTestRunner.class)
@@ -39,7 +38,7 @@ public class PersonBeanValidationTest {
      */
     @Inject
     private Validator validator;
-    
+
     /**
      * Setup test.
      */

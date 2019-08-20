@@ -1,20 +1,20 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'eclipse'
-apply plugin: 'jacoco'
-apply plugin: 'pmd'
-apply plugin: 'findbugs'
-apply plugin: 'jdepend'
-apply plugin: 'checkstyle'
-apply plugin: 'project-report'
-apply plugin: 'distribution'
-apply plugin: 'build-dashboard'
-apply plugin: 'project-report'
+plugins {
+    id 'java'
+    id 'maven'
+    id 'eclipse'
+    id 'jacoco'
+    id 'pmd'
+    id 'checkstyle'
+    id 'project-report'
+    id 'distribution'
+    id 'build-dashboard'
+    id 'com.github.spotbugs' version '2.0.0'
+}
 
 defaultTasks 'build', 'htmlDependencyReport', 'jacocoTestReport'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 println("group: " + group + ", project.name: " + project.name + ", version: " + version)
 println("description: " + description)
@@ -38,8 +38,8 @@ configurations {
     }
     testRuntime {
         description 'Customized runtime for unit tests'
-        //extendsFrom testCompile, owbTestRuntime
-        extendsFrom testCompile, weldTestRuntime
+        extendsFrom testCompile, owbTestRuntime
+        //extendsFrom testCompile, weldTestRuntime
     }
 }
 
@@ -64,7 +64,8 @@ dependencies {
     //Apache Deltaspike CdiCtrl
     testCompile group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-api', version: deltaspikeVersion
     testRuntime group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion
-    
+    testRuntime group: 'org.apache.deltaspike.core', name: 'deltaspike-core-impl', version: deltaspikeVersion
+
     //Apache OpenWebbeans CDI Container
     owbTestRuntime group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion
     owbTestRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: owbVersion
@@ -75,13 +76,15 @@ dependencies {
     
     //JBoss Weld CDI Container
     weldTestRuntime group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion
-    weldTestRuntime group: 'org.jboss.weld.se', name: 'weld-se-core', version: weldVersion
+    weldTestRuntime group: 'org.jboss.weld.se', name: 'weld-se-shaded', version: weldVersion
     
     //MyFaces + Servlet API needed for clean test run with weld
     weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl-test', version: myfacesVersion
     weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl', version: myfacesVersion
     weldTestRuntime group: 'org.apache.myfaces.test', name: 'myfaces-test22', version: myfacesTest22Version
-    weldTestRuntime group: 'javax.servlet', name: 'javax.servlet-api', version: servletApiVersion		   
+    weldTestRuntime group: 'javax.servlet', name: 'javax.servlet-api', version: servletApiVersion
+
+
 }
 
 
@@ -168,106 +171,6 @@ task pom  {
 //Build a dashboard?
 buildDashboard.onlyIf { project.hasProperty('runChecks') }
 
-//Findbugs configuration
-findbugsMain.onlyIf { project.hasProperty('runChecks') }
-findbugsTest.onlyIf { project.hasProperty('runChecks') }
-
-tasks.withType(FindBugs) {
-    reports {
-        html {
-            enabled true
-        }
-        xml {
-            enabled false
-            xml.withMessages true
-    	}
-    }
-}
-
-findbugs {
-    //toolVersion = '2.0.1'
-    //sourceSets = [sourceSets.main]
-    ignoreFailures = true
-    reportsDir = file("$project.buildDir/reports/findbugs")
-    effort = 'max'
-    reportLevel = 'high'
-    //visitors = ['FindSqlInjection', 'SwitchFallthrough']
-    //omitVisitors = ['FindNonShortCircuit']
-    //includeFilter = file("$project.projectDir/config/findbugs/includeFilter.xml")
-    //Findbugs exclude filter: Used to define positive falses
-    //excludeFilter = file("$project.projectDir/config/findbugs/excludeFilter.xml")
-}
-
-//PMD Configuration
-pmdMain.onlyIf { project.hasProperty('runChecks') }
-pmdTest.onlyIf { project.hasProperty('runChecks') }
-
-tasks.withType(Pmd) {
-    reports {
-    	html {
-            enabled true
-        }
-        xml {
-            enabled true
-        }
-    }
-}
-
-pmd {
-    ignoreFailures = true
-    sourceSets = [sourceSets.main,sourceSets.test]
-    ruleSetFiles = files("$project.projectDir/config/pmd/rulesets/basic.xml")
-    //ruleSets = ["basic", "braces", "design"]
-    consoleOutput = false
-    ruleSets = [
-        'java-basic',
-        'java-braces',
-        'java-clone',
-        'java-codesize',
-        'java-comments',
-        //'java-controversial',
-        'java-design',
-        'java-empty',
-        'java-finalizers',
-        'java-imports',
-        //'java-javabeans',
-        'java-junit',
-        'java-logging-jakarta-commons',
-        //'java-logging-java',
-        'java-migrating',
-        'java-naming',
-        'java-optimizations',
-        //'java-strictexception',
-        'java-strings',
-        'java-sunsecure',
-        'java-typeresolution',
-        'java-unnecessary',
-        'java-unusedcode'           
-    ]
-    reportsDir = file("$project.buildDir/reports/pmd")	
-}
-
-//JDepend configuration
-jdependMain.onlyIf { project.hasProperty('runChecks') }
-jdependTest.onlyIf { project.hasProperty('runChecks') }
-
-tasks.withType(JDepend) {
-    reports {
-        text {
-            enabled true
-        }
-        xml {
-            enabled false
-        }
-    }
-}
-
-jdepend {
-    ignoreFailures = true
-    //sourceSets = [sourceSets.main]
-    reportsDir = file("$project.buildDir/reports/jdepend")    
-}
-
 //Checkstyle configuration
 checkstyleMain.onlyIf { project.hasProperty('runChecks') }
 checkstyleTest.onlyIf { project.hasProperty('runChecks') }
@@ -293,11 +196,48 @@ task checkstyleHtml(dependsOn: ['checkstyleMain', 'checkstyleTest']) {
     }
 }
 
+//PMD Configuration
+pmdMain.onlyIf { project.hasProperty('runChecks') }
+pmdTest.onlyIf { project.hasProperty('runChecks') }
+
+tasks.withType(Pmd) {
+    reports {
+        html {
+            enabled true
+        }
+        xml {
+            enabled true
+        }
+    }
+}
+
+pmd {
+    ignoreFailures = true
+    sourceSets = [sourceSets.main,sourceSets.test]
+    reportsDir = file("$project.buildDir/reports/pmd")
+    ruleSetFiles = files("$project.projectDir/config/pmd/java/errorprone.xml","$project.projectDir/config/pmd/java/security.xml")
+    ruleSets = []
+}
+
+//spotbugsMain.onlyIf { project.hasProperty('runChecks') }
+
+
+task spotbugs (type: com.github.spotbugs.SpotBugsTask) {
+    ignoreFailures = true
+    effort = 'max'
+    reportLevel = 'high'
+    spotbugsTest.enabled = false
+    reports {
+        xml.enabled = true
+    }
+}
+
+
+
 //Jacoco Configuration
 //Generate Java Code Coverage artefacts with tests1
 test {
     jacoco {
-        append = false
         destinationFile = file("$project.buildDir/jacoco/jacocoTest.exec")
         classDumpDir = file("$project.buildDir/jacoco/classpathdumps")
     }    
@@ -321,8 +261,8 @@ jacocoTestReport {
             //destination "${project.buildDir}/reports/jacoco"
         }
     }
-    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
-    classDirectories = files(sourceSets.main.output.classesDir)
+    //sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    //classDirectories = files(sourceSets.main.output.classesDir)
 
     //additionalSourceDirs = files(['test/java', 'src/java-test'])
     //additionalClassDirs = files(['build/jacoco/UT/classpathdumps/com/abc/xyz', 'build/jacoco/IT/classpathdumps/com/abc/xyz'])

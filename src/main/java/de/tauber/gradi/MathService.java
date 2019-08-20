@@ -1,5 +1,6 @@
 package de.tauber.gradi;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 /**
@@ -7,6 +8,7 @@ import javax.inject.Inject;
  *
  * @author atauber
  */
+@Dependent
 public class MathService {
 
     /**

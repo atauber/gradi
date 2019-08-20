@@ -1,5 +1,6 @@
 package de.tauber.gradi;
 
+
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;

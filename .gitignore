@@ -4,6 +4,7 @@
 /.project
 /.classpath
 /.settings
+/.idea
 /*.log
 /.nb-gradle/private/
 /pom.xml
