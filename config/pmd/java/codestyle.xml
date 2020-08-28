@@ -17,31 +17,32 @@
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#abstractnaming">
         <description>
-Abstract classes should be named 'AbstractXXX'.
+            Abstract classes should be named 'AbstractXXX'.
 
-This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
-by {% rule java/codestyle/ClassNamingConventions %}.
+            This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
+            by {% rule java/codestyle/ClassNamingConventions %}.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //ClassOrInterfaceDeclaration
- [@Abstract='true' and @Interface='false']
- [not (starts-with(@Image,'Abstract'))]
+ [@Abstract= true() and @Interface= false()]
+ [not (starts-with(@SimpleName,'Abstract'))]
 |
 //ClassOrInterfaceDeclaration
- [@Abstract='false']
- [$strict='true']
- [starts-with(@Image, 'Abstract')]
+ [@Abstract= false()]
+ [$strict= true()]
+ [starts-with(@SimpleName, 'Abstract')]
 ]]>
                 </value>
             </property>
             <property name="strict" type="Boolean" value="true" description="Also flag classes, that are named Abstract, but are not abstract."/>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public abstract class Foo { // should be AbstractFoo
 }
 ]]>
@@ -55,14 +56,14 @@ public abstract class Foo { // should be AbstractFoo
           class="net.sourceforge.pmd.lang.java.rule.codestyle.AtLeastOneConstructorRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#atleastoneconstructor">
         <description>
-<![CDATA[
+            <![CDATA[
 Each non-static class should declare at least one constructor.
 Classes with solely static members are ignored, refer to [UseUtilityClassRule](pmd_rules_java_design.html#useutilityclass) to detect those.
 ]]>
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
    // missing constructor
   public void doSomething() { ... }
@@ -73,16 +74,17 @@ public class Foo {
     </rule>
 
     <rule name="AvoidDollarSigns"
+          language="java"
           since="1.5"
           message="Avoid using dollar signs in variable/method/class/interface names"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.AvoidDollarSignsRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#avoiddollarsigns">
         <description>
-Avoid using dollar signs in variable/method/class/interface names.
+            Avoid using dollar signs in variable/method/class/interface names.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Fo$o {  // not a recommended name
 }
 ]]>
@@ -97,26 +99,27 @@ public class Fo$o {  // not a recommended name
           message="Avoid using final local variables, turn them into fields"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#avoidfinallocalvariable">
         <description>
-Avoid using final local variables, turn them into fields.
+            Avoid using final local variables, turn them into fields.
 
-Note that this is a controversial rule which is merely useful to enforce a certain code style
-(which is contradictory to good coding practices in most of the cases it's applied to) and
-avoid local literals being declared in a scope smaller than the class.
+            Note that this is a controversial rule which is merely useful to enforce a certain code style
+            (which is contradictory to good coding practices in most of the cases it's applied to) and
+            avoid local literals being declared in a scope smaller than the class.
 
-Also note, that this rule is the opposite of {% rule "java/codestyle/LocalVariableCouldBeFinal" %}.
-Having both rules enabled results in contradictory violations being reported.
+            Also note, that this rule is the opposite of {% rule "java/codestyle/LocalVariableCouldBeFinal" %}.
+            Having both rules enabled results in contradictory violations being reported.
 
-This rule is deprecated and will be removed with PMD 7.0.0. There is no replacement planned.
-If the goal is to avoid defining constants in a scope smaller than the class, then the rule
-{% rule "java/errorprone/AvoidDuplicateLiterals" %} should be used instead.
+            This rule is deprecated and will be removed with PMD 7.0.0. There is no replacement planned.
+            If the goal is to avoid defining constants in a scope smaller than the class, then the rule
+            {% rule "java/errorprone/AvoidDuplicateLiterals" %} should be used instead.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //LocalVariableDeclaration[
-  @Final = 'true'
+  @Final = true()
   and not(../../ForStatement)
   and
   (
@@ -130,7 +133,7 @@ If the goal is to avoid defining constants in a scope smaller than the class, th
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class MyClass {
     public void foo() {
         final String finalLocalVariable;
@@ -148,27 +151,28 @@ public class MyClass {
           message="Avoid prefixing parameters by in, out or inOut. Uses Javadoc to document this behavior."
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#avoidprefixingmethodparameters">
         <description>
-Prefixing parameters by 'in' or 'out' pollutes the name of the parameters and reduces code readability.
-To indicate whether or not a parameter will be modify in a method, its better to document method
-behavior with Javadoc.
+            Prefixing parameters by 'in' or 'out' pollutes the name of the parameters and reduces code readability.
+            To indicate whether or not a parameter will be modify in a method, its better to document method
+            behavior with Javadoc.
 
-This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
-by the more general rule {% rule java/codestyle/FormalParameterNamingConventions %}.
+            This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
+            by the more general rule {% rule java/codestyle/FormalParameterNamingConventions %}.
         </description>
         <priority>4</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //MethodDeclaration/MethodDeclarator/FormalParameters/FormalParameter/VariableDeclaratorId[
-        pmd:matches(@Image,'^in[A-Z].*','^out[A-Z].*','^in$','^out$')
+        pmd:matches(@Name,'^in[A-Z].*','^out[A-Z].*','^in$','^out$')
 ]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 // Not really clear
 public class Foo {
   public void bar(
@@ -180,7 +184,7 @@ public class Foo {
 ]]>
         </example>
         <example>
-<![CDATA[
+            <![CDATA[
 // Far more useful
 public class Foo {
   /**
@@ -205,23 +209,24 @@ public class Foo {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#avoidprotectedfieldinfinalclass">
         <description>
-Do not use protected fields in final classes since they cannot be subclassed.
-Clarify your intent by using private or package access modifiers instead.
+            Do not use protected fields in final classes since they cannot be subclassed.
+            Clarify your intent by using private or package access modifiers instead.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-//ClassOrInterfaceDeclaration[@Final='true']
+                    <![CDATA[
+//ClassOrInterfaceDeclaration[@Final= true()]
 /ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration
-/FieldDeclaration[@Protected='true']
+/FieldDeclaration[@Protected= true()]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public final class Bar {
   private int x;
   protected int y;  // bar cannot be subclassed, so is y really private or package visible?
@@ -238,24 +243,25 @@ public final class Bar {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#avoidprotectedmethodinfinalclassnotextending">
         <description>
-Do not use protected methods in most final classes since they cannot be subclassed. This should
-only be allowed in final classes that extend other classes with protected methods (whose
-visibility cannot be reduced). Clarify your intent by using private or package access modifiers instead.
+            Do not use protected methods in most final classes since they cannot be subclassed. This should
+            only be allowed in final classes that extend other classes with protected methods (whose
+            visibility cannot be reduced). Clarify your intent by using private or package access modifiers instead.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-//ClassOrInterfaceDeclaration[@Final='true' and not(ExtendsList)]
+                    <![CDATA[
+//ClassOrInterfaceDeclaration[@Final= true() and not(ExtendsList)]
 /ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration
-/MethodDeclaration[@Protected='true'][MethodDeclarator/@Image != 'finalize']
+/MethodDeclaration[@Protected=true() and @Name != 'finalize']
  ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public final class Foo {
   private int bar() {}
   protected int baz() {} // Foo cannot be subclassed, and doesn't extend anything, so is baz() really private or package visible?
@@ -271,17 +277,18 @@ public final class Foo {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#avoidusingnativecode">
         <description>
-Unnecessary reliance on Java Native Interface (JNI) calls directly reduces application portability
-and increases the maintenance burden.
+            Unnecessary reliance on Java Native Interface (JNI) calls directly reduces application portability
+            and increases the maintenance burden.
         </description>
         <priority>2</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>//Name[starts-with(@Image,'System.loadLibrary')]</value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class SomeJNIClass {
 
      public SomeJNIClass() {
@@ -307,29 +314,30 @@ public class SomeJNIClass {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#booleangetmethodname">
         <description>
-Methods that return boolean results should be named as predicate statements to denote this.
-I.e, 'isReady()', 'hasValues()', 'canCommit()', 'willFail()', etc.   Avoid the use of the 'get'
-prefix for these methods.
+            Methods that return boolean results should be named as predicate statements to denote this.
+            I.e, 'isReady()', 'hasValues()', 'canCommit()', 'willFail()', etc.   Avoid the use of the 'get'
+            prefix for these methods.
         </description>
         <priority>4</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-//MethodDeclaration[
-MethodDeclarator[count(FormalParameters/FormalParameter) = 0 or $checkParameterizedMethods = 'true']
-                [starts-with(@Image, 'get')]
-and
-ResultType/Type/PrimitiveType[@Image = 'boolean']
-and not(../Annotation//Name[@Image = 'Override'])
-]
+                    <![CDATA[
+//MethodDeclaration
+    [starts-with(@Name, 'get')]
+    [@Arity = 0 or $checkParameterizedMethods = true()]
+    [
+        ResultType/Type/PrimitiveType[@Image = 'boolean']
+        and not(../Annotation//Name[@Image = 'Override'])
+    ]
 ]]>
                 </value>
             </property>
             <property name="checkParameterizedMethods" type="Boolean" description="Check parameterized methods" value="false"/>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public boolean getFoo();            // bad
 public boolean isFoo();             // ok
 public boolean getFoo(boolean bar); // ok, unless checkParameterizedMethods=true
@@ -344,24 +352,25 @@ public boolean getFoo(boolean bar); // ok, unless checkParameterizedMethods=true
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#callsuperinconstructor">
         <description>
-It is a good practice to call super() in a constructor. If super() is not called but
-another constructor (such as an overloaded constructor) is called, this rule will not report it.
+            It is a good practice to call super() in a constructor. If super() is not called but
+            another constructor (such as an overloaded constructor) is called, this rule will not report it.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-//ClassOrInterfaceDeclaration[ count (ExtendsList/*) > 0 ]
+                    <![CDATA[
+//ClassOrInterfaceDeclaration[ExtendsList/*]
 /ClassOrInterfaceBody
  /ClassOrInterfaceBodyDeclaration
- /ConstructorDeclaration[ count (.//ExplicitConstructorInvocation)=0 ]
+ /ConstructorDeclaration[ not(.//ExplicitConstructorInvocation) ]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo extends Bar{
   public Foo() {
    // call the constructor of Bar
@@ -378,6 +387,7 @@ public class Foo extends Bar{
     </rule>
 
     <rule name="ClassNamingConventions"
+          language="java"
           since="1.2"
           message="The {0} name ''{1}'' doesn''t match ''{2}''"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.ClassNamingConventionsRule"
@@ -393,9 +403,9 @@ public class Foo extends Bar{
         </description>
         <priority>1</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 // This is Pascal case, the recommended naming convention in Java
-// Note that the default values of this rule don't allow underscores 
+// Note that the default values of this rule don't allow underscores
 // or accented characters in type names
 public class FooBar {}
 
@@ -411,20 +421,21 @@ public class Éléphant {}
     </rule>
 
     <rule name="CommentDefaultAccessModifier"
+          language="java"
           since="5.4.0"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.CommentDefaultAccessModifierRule"
           message="Missing commented default access modifier"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#commentdefaultaccessmodifier">
         <description>
-To avoid mistakes if we want that an Annotation, Class, Enum, Method, Constructor or Field have a default access modifier
-we must add a comment at the beginning of it's declaration.
-By default the comment must be `/* default */` or `/* package */`, if you want another, you have to provide a regular expression.
-This rule ignores by default all cases that have a @VisibleForTesting annotation. Use the
-property "ignoredAnnotations" to customize the recognized annotations.
+            To avoid mistakes if we want that an Annotation, Class, Enum, Method, Constructor or Field have a default access modifier
+            we must add a comment at the beginning of it's declaration.
+            By default the comment must be `/* default */` or `/* package */`, if you want another, you have to provide a regular expression.
+            This rule ignores by default all cases that have a @VisibleForTesting annotation. Use the
+            property "ignoredAnnotations" to customize the recognized annotations.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
     final String stringValue = "some string";
     String getString() {
@@ -450,21 +461,22 @@ public class Foo {
     </rule>
 
     <rule name="ConfusingTernary"
+          language="java"
           since="1.9"
           message="Avoid if (x != y) ..; else ..;"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.ConfusingTernaryRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#confusingternary">
         <description>
-Avoid negation within an "if" expression with an "else" clause.  For example, rephrase:
-`if (x != y) diff(); else same();` as: `if (x == y) same(); else diff();`.
+            Avoid negation within an "if" expression with an "else" clause.  For example, rephrase:
+            `if (x != y) diff(); else same();` as: `if (x == y) same(); else diff();`.
 
-Most "if (x != y)" cases without an "else" are often return cases, so consistent use of this
-rule makes the code easier to read.  Also, this resolves trivial ordering problems, such
-as "does the error case go first?" or "does the common case go first?".
+            Most "if (x != y)" cases without an "else" are often return cases, so consistent use of this
+            rule makes the code easier to read.  Also, this resolves trivial ordering problems, such
+            as "does the error case go first?" or "does the common case go first?".
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 boolean bar(int x, int y) {
     return (x != y) ? diff : same;
 }
@@ -544,21 +556,32 @@ while (true) {  // preferred approach
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#defaultpackage">
         <description>
-Use explicit scoping instead of accidental usage of default package private level.
-The rule allows methods and fields annotated with Guava's @VisibleForTesting.
+            Use explicit scoping instead of accidental usage of default package private level.
+            The rule allows methods and fields annotated with Guava's @VisibleForTesting and JUnit 5's annotations.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-//ClassOrInterfaceDeclaration[@Interface='false']
+                    <![CDATA[
+//ClassOrInterfaceDeclaration[@Interface= false()]
 /ClassOrInterfaceBody
 /ClassOrInterfaceBodyDeclaration
-[not(Annotation//Name[ends-with(@Image, 'VisibleForTesting')])]
+[not(Annotation//Name[
+    pmd-java:typeIs('org.junit.jupiter.api.Test')
+    or pmd-java:typeIs('org.junit.jupiter.api.RepeatedTest')
+    or pmd-java:typeIs('org.junit.jupiter.api.ParameterizedTest')
+    or pmd-java:typeIs('org.junit.jupiter.api.TestFactory')
+    or pmd-java:typeIs('org.junit.jupiter.api.TestTemplate')
+    or pmd-java:typeIs('org.junit.jupiter.api.BeforeAll')
+    or pmd-java:typeIs('org.junit.jupiter.api.AfterAll')
+    or pmd-java:typeIs('org.junit.jupiter.api.BeforeEach')
+    or pmd-java:typeIs('org.junit.jupiter.api.AfterEach')
+    or ends-with(@Image, 'VisibleForTesting')])]
 [
-FieldDeclaration[@PackagePrivate='true']
-or MethodDeclaration[@PackagePrivate='true']
+FieldDeclaration[@PackagePrivate= true()]
+or MethodDeclaration[@PackagePrivate= true()]
 ]
 ]]>
                 </value>
@@ -567,16 +590,17 @@ or MethodDeclaration[@PackagePrivate='true']
     </rule>
 
     <rule name="DontImportJavaLang"
+          language="java"
           since="0.5"
           message="Avoid importing anything from the package 'java.lang'"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.DontImportJavaLangRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#dontimportjavalang">
         <description>
-Avoid importing anything from the package 'java.lang'.  These classes are automatically imported (JLS 7.5.3).
+            Avoid importing anything from the package 'java.lang'.  These classes are automatically imported (JLS 7.5.3).
         </description>
         <priority>4</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 import java.lang.String;    // this is unnecessary
 
 public class Foo {}
@@ -591,16 +615,17 @@ public class Foo {}
     </rule>
 
     <rule name="DuplicateImports"
+          language="java"
           since="0.5"
           message="Avoid duplicate imports such as ''{0}''"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.DuplicateImportsRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#duplicateimports">
         <description>
-Duplicate or overlapping import statements should be avoided.
+            Duplicate or overlapping import statements should be avoided.
         </description>
         <priority>4</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 import java.lang.String;
 import java.lang.*;
 public class Foo {}
@@ -615,35 +640,36 @@ public class Foo {}
           message="An empty method in an abstract class should be abstract instead"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#emptymethodinabstractclassshouldbeabstract">
         <description>
-Empty or auto-generated methods in an abstract class should be tagged as abstract. This helps to remove their inapproprate
-usage by developers who should be implementing their own versions in the concrete subclasses.
+            Empty or auto-generated methods in an abstract class should be tagged as abstract. This helps to remove their inapproprate
+            usage by developers who should be implementing their own versions in the concrete subclasses.
         </description>
         <priority>1</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-//ClassOrInterfaceDeclaration[@Abstract = 'true']
+                    <![CDATA[
+//ClassOrInterfaceDeclaration[@Abstract = true()]
     /ClassOrInterfaceBody
     /ClassOrInterfaceBodyDeclaration
-    /MethodDeclaration[@Abstract = 'false' and @Native = 'false']
+    /MethodDeclaration[@Abstract = false() and @Native = false()]
     [
-        ( boolean(./Block[count(./BlockStatement) =  1]/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal/NullLiteral) = 'true' )
+        ( boolean(./Block[count(./BlockStatement) =  1]/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal/NullLiteral) = true() )
         or
-        ( boolean(./Block[count(./BlockStatement) =  1]/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal[@Image = '0']) = 'true' )
+        ( boolean(./Block[count(./BlockStatement) =  1]/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal[@Image = '0']) = true() )
         or
-        ( boolean(./Block[count(./BlockStatement) =  1]/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal[string-length(@Image) = 2]) = 'true' )
+        ( boolean(./Block[count(./BlockStatement) =  1]/BlockStatement/Statement/ReturnStatement/Expression/PrimaryExpression/PrimaryPrefix/Literal[string-length(@Image) = 2]) = true() )
         or
         (./Block[count(./BlockStatement) =  1]/BlockStatement/Statement/EmptyStatement)
         or
-        ( count (./Block/*) = 0 )
+        ( not (./Block/*) )
     ]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public abstract class ShouldBeAbstract {
     public Object couldBeAbstract() {
         // Should be abstract method ?
@@ -666,16 +692,17 @@ public abstract class ShouldBeAbstract {
         <description>No need to explicitly extend Object.</description>
         <priority>4</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //ExtendsList/ClassOrInterfaceType[@Image='Object' or @Image='java.lang.Object']
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo extends Object {     // not required
 }
 ]]>
@@ -689,11 +716,11 @@ public class Foo extends Object {     // not required
           class="net.sourceforge.pmd.lang.java.rule.codestyle.FieldDeclarationsShouldBeAtStartOfClassRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#fielddeclarationsshouldbeatstartofclass">
         <description>
-Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
+            Fields should be declared at the top of the class, before any method declarations, constructors, initializers or inner classes.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class HelloWorldBean {
 
   // Field declared before methods / inner classes - OK
@@ -712,6 +739,7 @@ public class HelloWorldBean {
 
 
     <rule name="FieldNamingConventions"
+          language="java"
           since="6.7.0"
           message="The {0} name ''{1}'' doesn''t match ''{2}''"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.FieldNamingConventionsRule"
@@ -754,13 +782,14 @@ public class HelloWorldBean {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#forloopshouldbewhileloop">
         <description>
-Some for loops can be simplified to while loops, this makes them more concise.
+            Some for loops can be simplified to while loops, this makes them more concise.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //ForStatement
   [not(LocalVariableDeclaration)]
   [not(ForInit)]
@@ -771,7 +800,7 @@ Some for loops can be simplified to while loops, this makes them more concise.
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
     void bar() {
         for (;true;) true; // No Init or Update part, may as well be: while (true)
@@ -789,21 +818,22 @@ public class Foo {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#forloopsmustusebraces">
         <description>
-Avoid using 'for' statements without using curly braces. If the code formatting or 
-indentation is lost then it becomes difficult to separate the code being controlled 
-from the rest.
+            Avoid using 'for' statements without using curly braces. If the code formatting or
+            indentation is lost then it becomes difficult to separate the code being controlled
+            from the rest.
 
-This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
-by the rule {% rule java/codestyle/ControlStatementBraces %}.
+            This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
+            by the rule {% rule java/codestyle/ControlStatementBraces %}.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>//ForStatement[not(Statement/Block)]</value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 for (int i = 0; i < 42; i++)
    foo();
 ]]>
@@ -811,6 +841,7 @@ for (int i = 0; i < 42; i++)
     </rule>
 
     <rule name="FormalParameterNamingConventions"
+          language="java"
           since="6.6.0"
           message="The {0} name ''{1}'' doesn''t match ''{2}''"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.FormalParameterNamingConventionsRule"
@@ -856,24 +887,25 @@ for (int i = 0; i < 42; i++)
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#genericsnaming">
         <description>
-Names for references to generic values should be limited to a single uppercase letter.
+            Names for references to generic values should be limited to a single uppercase letter.
         </description>
         <priority>4</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //TypeDeclaration/ClassOrInterfaceDeclaration/TypeParameters/TypeParameter[
-  string-length(@Image) > 1 
+  string-length(@Image) > 1
   or
-  string:upper-case(@Image) != @Image
+  upper-case(@Image) != @Image
 ]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public interface GenericDao<E extends BaseModel, K extends Serializable> extends BaseDao {
     // This is ok...
 }
@@ -934,20 +966,21 @@ try {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#ifelsestmtsmustusebraces">
         <description>
-Avoid using if..else statements without using surrounding braces. If the code formatting 
-or indentation is lost then it becomes difficult to separate the code being controlled 
-from the rest.
+            Avoid using if..else statements without using surrounding braces. If the code formatting
+            or indentation is lost then it becomes difficult to separate the code being controlled
+            from the rest.
 
-This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
-by the rule {% rule java/codestyle/ControlStatementBraces %}.
+            This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
+            by the rule {% rule java/codestyle/ControlStatementBraces %}.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //Statement
- [parent::IfStatement[@Else='true']]
+ [parent::IfStatement[@Else= true()]]
  [not(child::Block)]
  [not(child::IfStatement)]
 ]]>
@@ -955,7 +988,7 @@ by the rule {% rule java/codestyle/ControlStatementBraces %}.
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
    // this is OK
 if (foo) x++;
 
@@ -976,25 +1009,26 @@ if (foo)
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#ifstmtsmustusebraces">
         <description>
-Avoid using if statements without using braces to surround the code block. If the code 
-formatting or indentation is lost then it becomes difficult to separate the code being
-controlled from the rest.
+            Avoid using if statements without using braces to surround the code block. If the code
+            formatting or indentation is lost then it becomes difficult to separate the code being
+            controlled from the rest.
 
-This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
-by the rule {% rule java/codestyle/ControlStatementBraces %}.
+            This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
+            by the rule {% rule java/codestyle/ControlStatementBraces %}.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //IfStatement[count(*) < 3][not(Statement/Block)]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
- <![CDATA[
+            <![CDATA[
 if (foo)    // not recommended
     x++;
 
@@ -1024,11 +1058,11 @@ if (foo) {  // preferred approach
             false positives.
 
             For more information, see [Linguistic Antipatterns - What They Are and How
-Developers Perceive Them](https://doi.org/10.1007/s10664-014-9350-8).
+            Developers Perceive Them](https://doi.org/10.1007/s10664-014-9350-8).
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class LinguisticNaming {
     int isValid;    // the field name indicates a boolean, but it is an int.
     boolean isTrue; // correct type of the field
@@ -1077,13 +1111,14 @@ public class LinguisticNaming {
           message="The Local Home interface of a Session EJB should be suffixed by 'LocalHome'"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#localhomenamingconvention">
         <description>
-The Local Home interface of a Session EJB should be suffixed by 'LocalHome'.
+            The Local Home interface of a Session EJB should be suffixed by 'LocalHome'.
         </description>
         <priority>4</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //ClassOrInterfaceDeclaration
 [
     (
@@ -1092,7 +1127,7 @@ The Local Home interface of a Session EJB should be suffixed by 'LocalHome'.
     and
     not
     (
-        ends-with(@Image,'LocalHome')
+        ends-with(@SimpleName,'LocalHome')
     )
 ]
 ]]>
@@ -1100,7 +1135,7 @@ The Local Home interface of a Session EJB should be suffixed by 'LocalHome'.
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public interface MyBeautifulLocalHome extends javax.ejb.EJBLocalHome {} // proper name
 
 public interface MissingProperSuffix extends javax.ejb.EJBLocalHome {}  // non-standard name
@@ -1115,13 +1150,14 @@ public interface MissingProperSuffix extends javax.ejb.EJBLocalHome {}  // non-s
           message="The Local Interface of a Session EJB should be suffixed by 'Local'"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#localinterfacesessionnamingconvention">
         <description>
-The Local Interface of a Session EJB should be suffixed by 'Local'.
+            The Local Interface of a Session EJB should be suffixed by 'Local'.
         </description>
         <priority>4</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //ClassOrInterfaceDeclaration
 [
     (
@@ -1130,7 +1166,7 @@ The Local Interface of a Session EJB should be suffixed by 'Local'.
     and
     not
     (
-        ends-with(@Image,'Local')
+        ends-with(@SimpleName,'Local')
     )
 ]
 ]]>
@@ -1138,7 +1174,7 @@ The Local Interface of a Session EJB should be suffixed by 'Local'.
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public interface MyLocal extends javax.ejb.EJBLocalObject {}                // proper name
 
 public interface MissingProperSuffix extends javax.ejb.EJBLocalObject {}    // non-standard name
@@ -1147,16 +1183,17 @@ public interface MissingProperSuffix extends javax.ejb.EJBLocalObject {}    // n
     </rule>
 
     <rule name="LocalVariableCouldBeFinal"
+          language="java"
           since="2.2"
           message="Local variable ''{0}'' could be declared final"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.LocalVariableCouldBeFinalRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#localvariablecouldbefinal">
         <description>
-A local variable assigned only once can be declared final.
+            A local variable assigned only once can be declared final.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Bar {
     public void foo () {
     String txtA = "a";          // if txtA will not be assigned again it is better to do this:
@@ -1168,6 +1205,7 @@ public class Bar {
     </rule>
 
     <rule name="LocalVariableNamingConventions"
+          language="java"
           since="6.6.0"
           message="The {0} name ''{1}'' doesn''t match ''{2}''"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.LocalVariableNamingConventionsRule"
@@ -1209,21 +1247,22 @@ public class Bar {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#longvariable">
         <description>
-Fields, formal arguments, or local variable names that are too long can make the code difficult to follow.
+            Fields, formal arguments, or local variable names that are too long can make the code difficult to follow.
         </description>
         <priority>3</priority>
         <properties>
             <property name="minimum" type="Integer" description="The variable length reporting threshold" min="1" max="100" value="17"/>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-//VariableDeclaratorId[string-length(@Image) > $minimum]
+                    <![CDATA[
+//VariableDeclaratorId[string-length(@Name) > $minimum]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Something {
     int reallyLongIntName = -3;             // VIOLATION - Field
     public static void main( String argumentsList[] ) { // VIOLATION - Formal
@@ -1244,13 +1283,14 @@ public class Something {
           message="SessionBean or MessageBean should be suffixed by Bean"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#mdbandsessionbeannamingconvention">
         <description>
-The EJB Specification states that any MessageDrivenBean or SessionBean should be suffixed by 'Bean'.
+            The EJB Specification states that any MessageDrivenBean or SessionBean should be suffixed by 'Bean'.
         </description>
         <priority>4</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //TypeDeclaration/ClassOrInterfaceDeclaration
 [
     (
@@ -1261,7 +1301,7 @@ The EJB Specification states that any MessageDrivenBean or SessionBean should be
     and
     not
     (
-        ends-with(@Image,'Bean')
+        ends-with(@SimpleName,'Bean')
     )
 ]
 ]]>
@@ -1269,7 +1309,7 @@ The EJB Specification states that any MessageDrivenBean or SessionBean should be
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class SomeBean implements SessionBean{}                  // proper name
 
 public class MissingTheProperSuffix implements SessionBean {}   // non-standard name
@@ -1278,16 +1318,17 @@ public class MissingTheProperSuffix implements SessionBean {}   // non-standard 
     </rule>
 
     <rule name="MethodArgumentCouldBeFinal"
+          language="java"
           since="2.2"
           message="Parameter ''{0}'' is not assigned and could be declared final"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.MethodArgumentCouldBeFinalRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#methodargumentcouldbefinal">
         <description>
-A method argument that is never re-assigned within the method can be declared final.
+            A method argument that is never re-assigned within the method can be declared final.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public void foo1 (String param) {       // do stuff with param never assigning it
 
 }
@@ -1300,6 +1341,7 @@ public void foo2 (final String param) { // better, do stuff with param never ass
     </rule>
 
     <rule name="MethodNamingConventions"
+          language="java"
           since="1.2"
           message="The {0} name ''{1}'' doesn''t match ''{2}''"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.MethodNamingConventionsRule"
@@ -1314,7 +1356,7 @@ public void foo2 (final String param) { // better, do stuff with param never ass
         </description>
         <priority>1</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
     public void fooStuff() {
     }
@@ -1331,26 +1373,27 @@ public class Foo {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#misleadingvariablename">
         <description>
-Detects when a non-field has a name starting with 'm_'.  This usually denotes a field and could be confusing.
+            Detects when a non-field has a name starting with 'm_'.  This usually denotes a field and could be confusing.
 
-This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
-by the more general rule
-{% rule java/codestyle/LocalVariableNamingConventions %}.
+            This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
+            by the more general rule
+            {% rule java/codestyle/LocalVariableNamingConventions %}.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //VariableDeclaratorId
-[starts-with(@Image, 'm_')]
+[starts-with(@Name, 'm_')]
 [not (../../../FieldDeclaration)]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
     private int m_foo; // OK
     public void bar(String m_baz) { // Bad
@@ -1368,7 +1411,7 @@ public class Foo {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#nopackage">
         <description>
-Detects when a class, interface, enum or annotation does not have a package definition.
+            Detects when a class, interface, enum or annotation does not have a package definition.
         </description>
         <priority>3</priority>
         <properties>
@@ -1378,7 +1421,7 @@ Detects when a class, interface, enum or annotation does not have a package defi
             <property name="version" value="2.0"/>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 // no package declaration
 public class ClassInDefaultPackage {
 }
@@ -1445,18 +1488,19 @@ public class Foo {
     </rule>
 
     <rule name="OnlyOneReturn"
+          language="java"
           since="1.0"
           message="A method should have only one exit point, and that should be the last statement in the method"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.OnlyOneReturnRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#onlyonereturn">
         <description>
-A method should have only one exit point, and that should be the last statement in the method.
+            A method should have only one exit point, and that should be the last statement in the method.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class OneReturnOnly1 {
-  public void foo(int x) {
+  public String foo(int x) {
     if (x > 0) {
       return "hey";   // first exit
     }
@@ -1474,16 +1518,17 @@ public class OneReturnOnly1 {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#packagecase">
         <description>
-Detects when a package definition contains uppercase characters.
+            Detects when a package definition contains uppercase characters.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>//PackageDeclaration/Name[lower-case(@Image)!=@Image]</value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 package com.MyCompany;  // should be lowercase name
 
 public class SomeClass {
@@ -1499,11 +1544,11 @@ public class SomeClass {
           class="net.sourceforge.pmd.lang.java.rule.codestyle.PrematureDeclarationRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#prematuredeclaration">
         <description>
-Checks for variables that are defined before they might be used. A reference is deemed to be premature if it is created right before a block of code that doesn't use it that also has the ability to return or throw an exception.
+            Checks for variables that are defined before they might be used. A reference is deemed to be premature if it is created right before a block of code that doesn't use it that also has the ability to return or throw an exception.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public int getLength(String[] strings) {
 
     int length = 0; // declared prematurely
@@ -1527,13 +1572,14 @@ public int getLength(String[] strings) {
           message="Remote Interface of a Session EJB should NOT be suffixed"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#remoteinterfacenamingconvention">
         <description>
-Remote Interface of a Session EJB should not have a suffix.
+            Remote Interface of a Session EJB should not have a suffix.
         </description>
         <priority>4</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //ClassOrInterfaceDeclaration
 [
     (
@@ -1541,11 +1587,11 @@ Remote Interface of a Session EJB should not have a suffix.
     )
     and
     (
-        ends-with(@Image,'Session')
+        ends-with(@SimpleName,'Session')
         or
-        ends-with(@Image,'EJB')
+        ends-with(@SimpleName,'EJB')
         or
-        ends-with(@Image,'Bean')
+        ends-with(@SimpleName,'Bean')
     )
 ]
 ]]>
@@ -1553,7 +1599,7 @@ Remote Interface of a Session EJB should not have a suffix.
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 /* Poor Session suffix */
 public interface BadSuffixSession extends javax.ejb.EJBObject {}
 
@@ -1573,13 +1619,14 @@ public interface BadSuffixBean extends javax.ejb.EJBObject {}
           message="Remote Home interface of a Session EJB should be suffixed by 'Home'"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#remotesessioninterfacenamingconvention">
         <description>
-A Remote Home interface type of a Session EJB should be suffixed by 'Home'.
+            A Remote Home interface type of a Session EJB should be suffixed by 'Home'.
         </description>
         <priority>4</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //ClassOrInterfaceDeclaration
 [
     (
@@ -1588,7 +1635,7 @@ A Remote Home interface type of a Session EJB should be suffixed by 'Home'.
     and
     not
     (
-        ends-with(@Image,'Home')
+        ends-with(@SimpleName,'Home')
     )
 ]
 ]]>
@@ -1596,7 +1643,7 @@ A Remote Home interface type of a Session EJB should be suffixed by 'Home'.
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public interface MyBeautifulHome extends javax.ejb.EJBHome {}       // proper name
 
 public interface MissingProperSuffix extends javax.ejb.EJBHome {}   // non-standard name
@@ -1611,21 +1658,22 @@ public interface MissingProperSuffix extends javax.ejb.EJBHome {}   // non-stand
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#shortclassname">
         <description>
-Short Classnames with fewer than e.g. five characters are not recommended.
+            Short Classnames with fewer than e.g. five characters are not recommended.
         </description>
         <priority>4</priority>
         <properties>
             <property name="minimum" type="Integer" value="5" min="1" max="100" description="Number of characters that are required as a minimum for a class name."/>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-//ClassOrInterfaceDeclaration[string-length(@Image) < $minimum]
+                    <![CDATA[
+//ClassOrInterfaceDeclaration[string-length(@SimpleName) < $minimum]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
 }
 ]]>
@@ -1639,21 +1687,22 @@ public class Foo {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#shortmethodname">
         <description>
-Method names that are very short are not helpful to the reader.
+            Method names that are very short are not helpful to the reader.
         </description>
         <priority>3</priority>
         <properties>
             <property name="minimum" type="Integer" value="3" min="1" max="100" description="Number of characters that are required as a minimum for a method name."/>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-//MethodDeclarator[string-length(@Image) < $minimum]
+                    <![CDATA[
+//MethodDeclaration[string-length(@Name) < $minimum]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class ShortMethod {
     public void a( int i ) { // Violation
     }
@@ -1669,7 +1718,7 @@ public class ShortMethod {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#shortvariable">
         <description>
-Fields, local variables, or parameter names that are very short are not helpful to the reader.
+            Fields, local variables, or parameter names that are very short are not helpful to the reader.
         </description>
         <priority>3</priority>
         <properties>
@@ -1677,8 +1726,8 @@ Fields, local variables, or parameter names that are very short are not helpful 
             <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-//VariableDeclaratorId[string-length(@Image) < $minimum]
+                    <![CDATA[
+//VariableDeclaratorId[string-length(@Name) < $minimum]
  (: ForStatement :)
  [not(../../..[self::ForInit])]
  (: Foreach statement :)
@@ -1692,7 +1741,7 @@ Fields, local variables, or parameter names that are very short are not helpful 
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Something {
     private int q = 15;                         // field - too short
     public static void main( String as[] ) {    // formal arg - too short
@@ -1717,27 +1766,28 @@ public class Something {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#suspiciousconstantfieldname">
         <description>
-Field names using all uppercase characters - Sun's Java naming conventions indicating constants - should
-be declared as final.
+            Field names using all uppercase characters - Sun's Java naming conventions indicating constants - should
+            be declared as final.
 
-This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
-by the more general rule {% rule java/codestyle/FieldNamingConventions %}.
+            This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
+            by the more general rule {% rule java/codestyle/FieldNamingConventions %}.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-//ClassOrInterfaceDeclaration[@Interface='false']
+                    <![CDATA[
+//ClassOrInterfaceDeclaration[@Interface= false()]
  /ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/FieldDeclaration
-  [@Final='false']
-  [VariableDeclarator/VariableDeclaratorId[upper-case(@Image)=@Image]]
+  [@Final= false()]
+  [VariableDeclarator/VariableDeclaratorId[upper-case(@Name)=@Name]]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
  // this is bad, since someone could accidentally
  // do PI = 2.71828; which is actually e
@@ -1755,25 +1805,26 @@ public class Foo {
           message="Too many static imports may lead to messy code"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#toomanystaticimports">
         <description>
-If you overuse the static import feature, it can make your program unreadable and 
-unmaintainable, polluting its namespace with all the static members you import. 
-Readers of your code (including you, a few months after you wrote it) will not know 
-which class a static member comes from (Sun 1.5 Language Guide).
+            If you overuse the static import feature, it can make your program unreadable and
+            unmaintainable, polluting its namespace with all the static members you import.
+            Readers of your code (including you, a few months after you wrote it) will not know
+            which class a static member comes from (Sun 1.5 Language Guide).
         </description>
         <priority>3</priority>
         <properties>
-            <property name="maximumStaticImports" type="Integer" 
+            <property name="maximumStaticImports" type="Integer"
                       description="All static imports can be disallowed by setting this to 0" min="0" max="100" value="4"/>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-.[count(ImportDeclaration[@Static = 'true']) > $maximumStaticImports]
+                    <![CDATA[
+.[count(ImportDeclaration[@Static = true()]) > $maximumStaticImports]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 import static Lennon;
 import static Ringo;
 import static George;
@@ -1785,6 +1836,7 @@ import static Yoko; // Too much !
 
 
     <rule name="UnnecessaryAnnotationValueElement"
+          language="java"
           since="6.2.0"
           message="Avoid the use of value in annotations when it's the only element"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.UnnecessaryAnnotationValueElementRule"
@@ -1827,6 +1879,30 @@ public class Foo {
         </example>
     </rule>
 
+    <rule name="UnnecessaryCast"
+          language="java"
+          minimumLanguageVersion="1.5"
+          since="6.24.0"
+          message="Avoid unnecessary casts"
+          class="net.sourceforge.pmd.lang.java.rule.codestyle.UnnecessaryCastRule"
+          externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#unnecessarycast">
+        <description>
+            This rule detects when a cast is unnecessary while accessing collection elements. This rule is mostly useful
+            for old java code before generics where introduced with java 1.5.
+        </description>
+        <priority>3</priority>
+        <example>
+            <![CDATA[
+public class UnnecessaryCastSample {
+    public void method() {
+        List<String> stringList = Arrays.asList("a", "b");
+        String element = (String) stringList.get(0); // this cast is unnecessary
+        String element2 = stringList.get(0);
+    }
+}
+]]>
+        </example>
+    </rule>
 
     <rule name="UnnecessaryConstructor"
           language="java"
@@ -1835,13 +1911,13 @@ public class Foo {
           class="net.sourceforge.pmd.lang.java.rule.codestyle.UnnecessaryConstructorRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#unnecessaryconstructor">
         <description>
-This rule detects when a constructor is not necessary; i.e., when there is only one constructor and the
-constructor is identical to the default constructor. The default constructor should has same access
-modifier as the declaring class. In an enum type, the default constructor is implicitly private.
+            This rule detects when a constructor is not necessary; i.e., when there is only one constructor and the
+            constructor is identical to the default constructor. The default constructor should has same access
+            modifier as the declaring class. In an enum type, the default constructor is implicitly private.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
   public Foo() {}
 }
@@ -1856,12 +1932,12 @@ public class Foo {
           message="Unnecessary use of fully qualified name ''{0}'' due to existing {2}import ''{1}''"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#unnecessaryfullyqualifiedname">
         <description>
-Import statements allow the use of non-fully qualified names.  The use of a fully qualified name
-which is covered by an import statement is redundant.  Consider using the non-fully qualified name.
+            Import statements allow the use of non-fully qualified names.  The use of a fully qualified name
+            which is covered by an import statement is redundant.  Consider using the non-fully qualified name.
         </description>
         <priority>4</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 import java.util.List;
 
 public class Foo {
@@ -1873,16 +1949,17 @@ public class Foo {
     </rule>
 
     <rule name="UnnecessaryLocalBeforeReturn"
+          language="java"
           since="3.3"
           message="Consider simply returning the value vs storing it in local variable ''{0}''"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.UnnecessaryLocalBeforeReturnRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#unnecessarylocalbeforereturn">
         <description>
-Avoid the creation of unnecessary local variables
+            Avoid the creation of unnecessary local variables
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
    public int foo() {
      int x = doSomething();
@@ -1900,15 +1977,15 @@ public class Foo {
           class="net.sourceforge.pmd.lang.java.rule.codestyle.UnnecessaryModifierRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#unnecessarymodifier">
         <description>
-Fields in interfaces and annotations are automatically `public static final`, and methods are `public abstract`.
-Classes, interfaces or annotations nested in an interface or annotation are automatically `public static`
-(all nested interfaces and annotations are automatically static).
-Nested enums are automatically `static`.
-For historical reasons, modifiers which are implied by the context are accepted by the compiler, but are superfluous.
+            Fields in interfaces and annotations are automatically `public static final`, and methods are `public abstract`.
+            Classes, interfaces or annotations nested in an interface or annotation are automatically `public static`
+            (all nested interfaces and annotations are automatically static).
+            Nested enums are automatically `static`.
+            For historical reasons, modifiers which are implied by the context are accepted by the compiler, but are superfluous.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public @interface Annotation {
     public abstract void bar();     // both abstract and public are ignored by the compiler
     public static final int X = 0;  // public, static, and final all ignored
@@ -1932,16 +2009,17 @@ public class Bar {
     </rule>
 
     <rule name="UnnecessaryReturn"
+          language="java"
           since="1.3"
           message="Avoid unnecessary return statements"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.UnnecessaryReturnRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#unnecessaryreturn">
         <description>
-Avoid the use of unnecessary return statements.
+            Avoid the use of unnecessary return statements.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
     public void bar() {
         int x = 42;
@@ -1960,28 +2038,38 @@ public class Foo {
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#usediamondoperator"
           minimumLanguageVersion="1.7">
         <description>
-Use the diamond operator to let the type be inferred automatically. With the Diamond operator it is possible
-to avoid duplication of the type parameters.
-Instead, the compiler is now able to infer the parameter types for constructor calls,
-which makes the code also more readable.
+            Use the diamond operator to let the type be inferred automatically. With the Diamond operator it is possible
+            to avoid duplication of the type parameters.
+            Instead, the compiler is now able to infer the parameter types for constructor calls,
+            which makes the code also more readable.
+
+            The diamond operator has been introduced with java 7. However, type inference has been improved further
+            with java8, rendering more type parameters unnecessary. This is only possible with java8 and the resulting
+            code won't compile with java7. If you use java7, make sure to enable `java7Compatibility` for this rule to avoid
+            false positives.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0" />
             <property name="xpath">
                 <value>
                     <![CDATA[
-//VariableInitializer[preceding-sibling::VariableDeclaratorId[1]/@TypeInferred="false"]
-//PrimaryExpression[not(PrimarySuffix)]
-[not(ancestor::ArgumentList)]
-/PrimaryPrefix/AllocationExpression[ClassOrInterfaceType[@AnonymousClass='false']/TypeArguments//ReferenceType[not(.//TypeArguments)]]
+(
+//VariableInitializer[preceding-sibling::VariableDeclaratorId[1]/@TypeInferred=false()]
 |
-//StatementExpression[AssignmentOperator][PrimaryExpression/PrimaryPrefix[not(Expression)]]
-//PrimaryExpression[not(PrimarySuffix)]
-[not(ancestor::ArgumentList)]
-/PrimaryPrefix/AllocationExpression[ClassOrInterfaceType[@AnonymousClass='false']/TypeArguments//ReferenceType[not(.//TypeArguments)]]
+//StatementExpression[AssignmentOperator and PrimaryExpression/PrimaryPrefix[not(Expression)]]
+)
+/(Expression | Expression[$java7Compatibility = false()]/ConditionalExpression | Expression[$java7Compatibility = false()]/ConditionalExpression/Expression)
+/PrimaryExpression[not(PrimarySuffix) and not(ancestor::ArgumentList)]
+/PrimaryPrefix
+/AllocationExpression
+    [@AnonymousClass=false()]
+    [ClassOrInterfaceType/TypeArguments[@Diamond=false() and not($java7Compatibility = true() and .//TypeArgument[@Wildcard=true()])]]
+    [not(ArrayDimsAndInits)]
 ]]>
                 </value>
             </property>
+            <property name="java7Compatibility" type="Boolean" description="If disabled, the rule shows also violations that are applicable for java8+" value="false" />
         </properties>
         <example>
             <![CDATA[
@@ -2000,9 +2088,10 @@ List<String> stringsWithDiamond = new ArrayList<>(); // using the diamond operat
         <description>Useless parentheses should be removed.</description>
         <priority>4</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //Expression[not(parent::PrimaryPrefix)]/PrimaryExpression[count(*)>1]
   /PrimaryPrefix/Expression
     [not(./CastExpression)]
@@ -2015,10 +2104,10 @@ List<String> stringsWithDiamond = new ArrayList<>(); // using the diamond operat
 |
 //Expression/ConditionalAndExpression/PrimaryExpression/PrimaryPrefix/Expression[
     count(*)=1 and
-    count(./CastExpression)=0 and
-    count(./EqualityExpression/MultiplicativeExpression)=0 and
-    count(./ConditionalExpression)=0 and
-    count(./ConditionalOrExpression)=0]
+    not(./CastExpression) and
+    not(./EqualityExpression/MultiplicativeExpression) and
+    not(./ConditionalExpression) and
+    not(./ConditionalOrExpression)]
 |
 //Expression/ConditionalOrExpression/PrimaryExpression/PrimaryPrefix/Expression[
     count(*)=1 and
@@ -2031,11 +2120,11 @@ List<String> stringsWithDiamond = new ArrayList<>(); // using the diamond operat
     not(./CastExpression) and
     not(./EqualityExpression)]
 |
-//Expression/AdditiveExpression[not(./PrimaryExpression/PrimaryPrefix/Literal[@StringLiteral='true'])]
+//Expression/AdditiveExpression[not(./PrimaryExpression/PrimaryPrefix/Literal[@StringLiteral= true()])]
   /PrimaryExpression[1]/PrimaryPrefix/Expression[
     count(*)=1 and
     not(./CastExpression) and
-    not(./AdditiveExpression[@Image = '-']) and
+    not(./AdditiveExpression[@Operator = '-']) and
     not(./ShiftExpression) and
     not(./RelationalExpression) and
     not(./InstanceOfExpression) and
@@ -2062,7 +2151,7 @@ List<String> stringsWithDiamond = new ArrayList<>(); // using the diamond operat
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
 
     private int _bar1;
@@ -2088,21 +2177,22 @@ public class Foo {
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //PrimaryExpression
 [PrimaryPrefix/Name[@Image]]
-[PrimarySuffix[@Arguments='false' and @ArrayDereference = 'false']]
+[PrimarySuffix[@Arguments= false() and @ArrayDereference = false()]]
 [not(PrimarySuffix/MemberSelector)]
-[ancestor::ClassOrInterfaceBodyDeclaration[1][@AnonymousInnerClass='false']]
-/PrimaryPrefix/Name[@Image = ancestor::ClassOrInterfaceDeclaration[1]/@Image]
+[ancestor::ClassOrInterfaceBodyDeclaration[1][@AnonymousInnerClass= false()]]
+/PrimaryPrefix/Name[@Image = ancestor::ClassOrInterfaceDeclaration[1]/@SimpleName]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
     final Foo otherFoo = Foo.this;  // use "this" directly
 
@@ -2132,13 +2222,13 @@ public class Foo {
     </rule>
 
     <rule name="UseShortArrayInitializer"
-        language="java"
-        since="6.15.0"
-        message="Array initialization can be written shorter"
-        class="net.sourceforge.pmd.lang.rule.XPathRule"
-        externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#useshortarrayinitializer">
+          language="java"
+          since="6.15.0"
+          message="Array initialization can be written shorter"
+          class="net.sourceforge.pmd.lang.rule.XPathRule"
+          externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#useshortarrayinitializer">
         <description>
-<![CDATA[
+            <![CDATA[
 When declaring and initializing array fields or variables, it is not necessary to explicitly create a new array
 using `new`. Instead one can simply define the initial content of the array as a expression in curly braces.
 
@@ -2147,6 +2237,7 @@ E.g. `int[] x = new int[] { 1, 2, 3 };` can be written as `int[] x = { 1, 2, 3 }
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value><![CDATA[
 //VariableDeclarator
@@ -2157,7 +2248,7 @@ E.g. `int[] x = new int[] { 1, 2, 3 };` can be written as `int[] x = { 1, 2, 3 }
             <property name="version" value="2.0"/>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 Foo[] x = new Foo[] { ... }; // Overly verbose
 Foo[] x = { ... }; //Equivalent to above line
 ]]>
@@ -2165,24 +2256,25 @@ Foo[] x = { ... }; //Equivalent to above line
     </rule>
 
     <rule name="VariableNamingConventions"
+          language="java"
           since="1.2"
           deprecated="true"
           message="{0} variable {1} should begin with {2}"
           class="net.sourceforge.pmd.lang.java.rule.codestyle.VariableNamingConventionsRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#variablenamingconventions">
         <description>
-A variable naming conventions rule - customize this to your liking.  Currently, it
-checks for final variables that should be fully capitalized and non-final variables
-that should not include underscores.
+            A variable naming conventions rule - customize this to your liking.  Currently, it
+            checks for final variables that should be fully capitalized and non-final variables
+            that should not include underscores.
 
-This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
-by the more general rules {% rule java/codestyle/FieldNamingConventions %},
-{% rule java/codestyle/FormalParameterNamingConventions %}, and
-{% rule java/codestyle/LocalVariableNamingConventions %}.
+            This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
+            by the more general rules {% rule java/codestyle/FieldNamingConventions %},
+            {% rule java/codestyle/FormalParameterNamingConventions %}, and
+            {% rule java/codestyle/LocalVariableNamingConventions %}.
         </description>
         <priority>1</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
     public static final int MY_NUM = 0;
     public String myTest = "";
@@ -2200,24 +2292,25 @@ public class Foo {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_codestyle.html#whileloopsmustusebraces">
         <description>
-Avoid using 'while' statements without using braces to surround the code block. If the code 
-formatting or indentation is lost then it becomes difficult to separate the code being
-controlled from the rest.
+            Avoid using 'while' statements without using braces to surround the code block. If the code
+            formatting or indentation is lost then it becomes difficult to separate the code being
+            controlled from the rest.
 
-This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
-by the rule {% rule java/codestyle/ControlStatementBraces %}.
+            This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
+            by the rule {% rule java/codestyle/ControlStatementBraces %}.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>//WhileStatement[not(Statement/Block)]</value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 while (true)    // not recommended
       x++;
-      
+
 while (true) {  // preferred approach
       x++;
 }

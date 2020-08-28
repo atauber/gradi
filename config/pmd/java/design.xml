@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 
 <ruleset name="Design"
-    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
 
     <description>
-Rules that help you discover design issues.
+        Rules that help you discover design issues.
     </description>
 
     <rule name="AbstractClassWithoutAnyMethod"
@@ -17,25 +17,27 @@ Rules that help you discover design issues.
           message="No abstract method which means that the keyword is most likely used to prevent instantiation. Use a private or protected constructor instead."
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#abstractclasswithoutanymethod">
         <description>
-If an abstract class does not provides any methods, it may be acting as a simple data container
-that is not meant to be instantiated. In this case, it is probably better to use a private or
-protected constructor in order to prevent instantiation than make the class misleadingly abstract.
+            If an abstract class does not provides any methods, it may be acting as a simple data container
+            that is not meant to be instantiated. In this case, it is probably better to use a private or
+            protected constructor in order to prevent instantiation than make the class misleadingly abstract.
         </description>
         <priority>1</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //ClassOrInterfaceDeclaration
-    [@Abstract = 'true']
-    [count(//MethodDeclaration) + count(//ConstructorDeclaration) = 0]
+    [@Abstract = true()]
+    [not(./ClassOrInterfaceBody/*/ConstructorDeclaration)]
+    [not(./ClassOrInterfaceBody/*/MethodDeclaration)]
     [not(../Annotation/MarkerAnnotation/Name[pmd-java:typeIs('com.google.auto.value.AutoValue')])]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public abstract class Example {
     String field;
     int otherField;
@@ -51,13 +53,14 @@ public abstract class Example {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#avoidcatchinggenericexception">
         <description>
-Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
+            Avoid catching generic exceptions such as NullPointerException, RuntimeException, Exception in try-catch block
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //CatchStatement/FormalParameter/Type/ReferenceType/ClassOrInterfaceType[
     @Image='NullPointerException' or
     @Image='Exception' or
@@ -67,7 +70,7 @@ Avoid catching generic exceptions such as NullPointerException, RuntimeException
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 package com.igate.primitive;
 
 public class PrimitiveType {
@@ -89,16 +92,17 @@ public class PrimitiveType {
     </rule>
 
     <rule name="AvoidDeeplyNestedIfStmts"
+          language="java"
           since="1.0"
           message="Deeply nested if..then statements are hard to read"
           class="net.sourceforge.pmd.lang.java.rule.design.AvoidDeeplyNestedIfStmtsRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#avoiddeeplynestedifstmts">
         <description>
-Avoid creating deeply nested if-then statements since they are harder to read and error-prone to maintain.
+            Avoid creating deeply nested if-then statements since they are harder to read and error-prone to maintain.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
   public void bar(int x, int y, int z) {
     if (x>y) {
@@ -121,15 +125,16 @@ public class Foo {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#avoidrethrowingexception">
         <description>
-Catch blocks that merely rethrow a caught exception only add to code size and runtime complexity.
+            Catch blocks that merely rethrow a caught exception only add to code size and runtime complexity.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //CatchStatement[FormalParameter
- /VariableDeclaratorId/@Image = Block/BlockStatement/Statement
+ /VariableDeclaratorId/@Name = Block/BlockStatement/Statement
  /ThrowStatement/Expression/PrimaryExpression[count(PrimarySuffix)=0]/PrimaryPrefix/Name/@Image
  and count(Block/BlockStatement/Statement) =1]
 ]]>
@@ -137,7 +142,7 @@ Catch blocks that merely rethrow a caught exception only add to code size and ru
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public void bar() {
     try {
         // do something
@@ -156,14 +161,15 @@ public void bar() {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#avoidthrowingnewinstanceofsameexception">
         <description>
-Catch blocks that merely rethrow a caught exception wrapped inside a new instance of the same type only add to
-code size and runtime complexity.
+            Catch blocks that merely rethrow a caught exception wrapped inside a new instance of the same type only add to
+            code size and runtime complexity.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //CatchStatement[
   count(Block/BlockStatement/Statement) = 1
   and
@@ -178,7 +184,7 @@ code size and runtime complexity.
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public void bar() {
     try {
         // do something
@@ -195,20 +201,20 @@ public void bar() {
           language="java"
           since="1.8"
           message="Avoid throwing null pointer exceptions."
-          class="net.sourceforge.pmd.lang.rule.XPathRule"
+          class="net.sourceforge.pmd.lang.java.rule.design.AvoidThrowingNullPointerExceptionRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#avoidthrowingnullpointerexception">
         <description>
-<![CDATA[
+            <![CDATA[
 Avoid throwing NullPointerExceptions manually. These are confusing because most people will assume that the
-virtual machine threw it.  To avoid a method being called with a null parameter, you may consider 
-using an IllegalArgumentException instead, making it clearly seen as a programmer-initiated exception. 
+virtual machine threw it.  To avoid a method being called with a null parameter, you may consider
+using an IllegalArgumentException instead, making it clearly seen as a programmer-initiated exception.
 However, there are better ways to handle this:
 
 >*Effective Java, 3rd Edition, Item 72: Favor the use of standard exceptions*
 >
->Arguably, every erroneous method invocation boils down to an illegal argument or state, 
-but other exceptions are standardly used for certain kinds of illegal arguments and states. 
-If a caller passes null in some parameter for which null values are prohibited, convention dictates that 
+>Arguably, every erroneous method invocation boils down to an illegal argument or state,
+but other exceptions are standardly used for certain kinds of illegal arguments and states.
+If a caller passes null in some parameter for which null values are prohibited, convention dictates that
 NullPointerException be thrown rather than IllegalArgumentException.
 
 To implement that, you are encouraged to use `java.util.Objects.requireNonNull()`
@@ -219,7 +225,7 @@ Your parameter validation could thus look like the following:
 ```
 public class Foo {
     private String exampleValue;
-      
+
     void setExampleValue(String exampleValue) {
       // check, throw and assignment in a single standard call
       this.exampleValue = Objects.requireNonNull(exampleValue, "exampleValue must not be null!");
@@ -229,17 +235,8 @@ public class Foo {
 ]]>
         </description>
         <priority>1</priority>
-        <properties>
-            <property name="xpath">
-                <value>
-<![CDATA[
-//AllocationExpression/ClassOrInterfaceType[@Image='NullPointerException']
-]]>
-                </value>
-            </property>
-        </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
     void bar() {
         throw new NullPointerException();
@@ -257,14 +254,15 @@ public class Foo {
           typeResolution="true"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#avoidthrowingrawexceptiontypes">
         <description>
-Avoid throwing certain exception types. Rather than throw a raw RuntimeException, Throwable,
-Exception, or Error, use a subclassed exception or error instead.
+            Avoid throwing certain exception types. Rather than throw a raw RuntimeException, Throwable,
+            Exception, or Error, use a subclassed exception or error instead.
         </description>
         <priority>1</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //ThrowStatement//AllocationExpression
  /ClassOrInterfaceType[
  pmd-java:typeIsExactly('java.lang.Throwable')
@@ -280,7 +278,7 @@ or
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
     public void bar() throws Exception {
         throw new Exception();
@@ -298,16 +296,17 @@ public class Foo {
           typeResolution="true"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#avoiduncheckedexceptionsinsignatures">
         <description>
-A method or constructor should not explicitly declare unchecked exceptions in its
-`throws` clause. Java doesn't force the caller to handle an unchecked exception,
-so it's unnecessary except for documentation. A better practice is to document the
-exceptional cases with a `@throws` Javadoc tag, which allows being more descriptive.
+            A method or constructor should not explicitly declare unchecked exceptions in its
+            `throws` clause. Java doesn't force the caller to handle an unchecked exception,
+            so it's unnecessary except for documentation. A better practice is to document the
+            exceptional cases with a `@throws` Javadoc tag, which allows being more descriptive.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //MethodDeclaration/NameList/Name[pmd-java:typeIs("java.lang.RuntimeException")]
 |
 //ConstructorDeclaration/NameList/Name[pmd-java:typeIs("java.lang.RuntimeException")]
@@ -316,7 +315,7 @@ exceptional cases with a `@throws` Javadoc tag, which allows being more descript
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public void foo() throws RuntimeException {
 }
 ]]>
@@ -330,25 +329,26 @@ public void foo() throws RuntimeException {
           message="A class which only has private constructors should be final"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#classwithonlyprivateconstructorsshouldbefinal">
         <description>
-A class with only private constructors should be final, unless the private constructor
-is invoked by a inner class.
+            A class with only private constructors should be final, unless the private constructor
+            is invoked by a inner class.
         </description>
         <priority>1</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-TypeDeclaration[count(../TypeDeclaration) = 1]/ClassOrInterfaceDeclaration
-[@Final = 'false']
-[count(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration[@Private = 'true']) >= 1 ]
-[count(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration[(@Public = 'true') or (@Protected = 'true') or (@PackagePrivate = 'true')]) = 0 ]
+                    <![CDATA[
+//TypeDeclaration[count(../TypeDeclaration) = 1]/ClassOrInterfaceDeclaration
+[@Final = false()]
+[ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration[@Private = true()]]
+[not(./ClassOrInterfaceBody/ClassOrInterfaceBodyDeclaration/ConstructorDeclaration[(@Public = true()) or (@Protected = true()) or (@PackagePrivate = true())])]
 [not(.//ClassOrInterfaceDeclaration)]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {  //Should be final
     private Foo() { }
 }
@@ -363,25 +363,26 @@ public class Foo {  //Should be final
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#collapsibleifstatements">
         <description>
-Sometimes two consecutive 'if' statements can be consolidated by separating their conditions with a boolean short-circuit operator.
+            Sometimes two consecutive 'if' statements can be consolidated by separating their conditions with a boolean short-circuit operator.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-//IfStatement[@Else='false']/Statement
- /IfStatement[@Else='false']
+                    <![CDATA[
+//IfStatement[@Else= false()]/Statement
+ /IfStatement[@Else= false()]
  |
-//IfStatement[@Else='false']/Statement
+//IfStatement[@Else= false()]/Statement
  /Block[count(BlockStatement)=1]/BlockStatement
-  /Statement/IfStatement[@Else='false']
+  /Statement/IfStatement[@Else= false()]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 void bar() {
     if (x) {            // original implementation
         if (y) {
@@ -400,17 +401,18 @@ void bar() {
     </rule>
 
     <rule name="CouplingBetweenObjects"
+          language="java"
           since="1.04"
           message="High amount of different objects as members denotes a high coupling"
           class="net.sourceforge.pmd.lang.java.rule.design.CouplingBetweenObjectsRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#couplingbetweenobjects">
         <description>
-This rule counts the number of unique attributes, local variables, and return types within an object. 
-A number higher than the specified threshold can indicate a high degree of coupling.
+            This rule counts the number of unique attributes, local variables, and return types within an object.
+            A number higher than the specified threshold can indicate a high degree of coupling.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 import com.Blah;
 import org.Bar;
 import org.Bardo;
@@ -432,6 +434,7 @@ public class Foo {
     </rule>
 
     <rule name="CyclomaticComplexity"
+          language="java"
           message="The {0} ''{1}'' has a{2} cyclomatic complexity of {3}."
           since="1.03"
           class="net.sourceforge.pmd.lang.java.rule.design.CyclomaticComplexityRule"
@@ -485,27 +488,28 @@ class Foo {
     </rule>
 
     <rule name="DataClass"
+          language="java"
           since="6.0.0"
           message="The class ''{0}'' is suspected to be a Data Class (WOC={1}, NOPA={2}, NOAM={3}, WMC={4})"
           class="net.sourceforge.pmd.lang.java.rule.design.DataClassRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#dataclass">
         <description>
-Data Classes are simple data holders, which reveal most of their state, and
-without complex functionality. The lack of functionality may indicate that
-their behaviour is defined elsewhere, which is a sign of poor data-behaviour
-proximity. By directly exposing their internals, Data Classes break encapsulation,
-and therefore reduce the system's maintainability and understandability. Moreover,
-classes tend to strongly rely on their data representation, which makes for a brittle
-design.
+            Data Classes are simple data holders, which reveal most of their state, and
+            without complex functionality. The lack of functionality may indicate that
+            their behaviour is defined elsewhere, which is a sign of poor data-behaviour
+            proximity. By directly exposing their internals, Data Classes break encapsulation,
+            and therefore reduce the system's maintainability and understandability. Moreover,
+            classes tend to strongly rely on their data representation, which makes for a brittle
+            design.
 
-Refactoring a Data Class should focus on restoring a good data-behaviour proximity. In
-most cases, that means moving the operations defined on the data back into the class.
-In some other cases it may make sense to remove entirely the class and move the data
-into the former client classes.
+            Refactoring a Data Class should focus on restoring a good data-behaviour proximity. In
+            most cases, that means moving the operations defined on the data back into the class.
+            In some other cases it may make sense to remove entirely the class and move the data
+            into the former client classes.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class DataClass {
 
   public int bar = 0;
@@ -528,13 +532,14 @@ public class DataClass {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#donotextendjavalangerror">
         <description>
-Errors are system exceptions. Do not extend them.
+            Errors are system exceptions. Do not extend them.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //ClassOrInterfaceDeclaration/ExtendsList/ClassOrInterfaceType
   [pmd-java:typeIs('java.lang.Error')]
 
@@ -544,24 +549,25 @@ Errors are system exceptions. Do not extend them.
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo extends Error { }
 ]]>
         </example>
     </rule>
 
     <rule name="ExceptionAsFlowControl"
+          language="java"
           since="1.8"
           message="Avoid using exceptions as flow control."
           class="net.sourceforge.pmd.lang.java.rule.design.ExceptionAsFlowControlRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#exceptionasflowcontrol">
         <description>
-Using Exceptions as form of flow control is not recommended as they obscure true exceptions when debugging.
-Either add the necessary validation or use an alternate control structure.
+            Using Exceptions as form of flow control is not recommended as they obscure true exceptions when debugging.
+            Either add the necessary validation or use an alternate control structure.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public void bar() {
     try {
         try {
@@ -578,18 +584,19 @@ public void bar() {
     </rule>
 
     <rule name="ExcessiveClassLength"
+          language="java"
           since="0.6"
           message="Avoid really long classes."
           class="net.sourceforge.pmd.lang.java.rule.design.ExcessiveClassLengthRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#excessiveclasslength">
         <description>
-Excessive class file lengths are usually indications that the class may be burdened with excessive 
-responsibilities that could be provided by external classes or functions. In breaking these methods
-apart the code becomes more manageable and ripe for reuse.
+            Excessive class file lengths are usually indications that the class may be burdened with excessive
+            responsibilities that could be provided by external classes or functions. In breaking these methods
+            apart the code becomes more manageable and ripe for reuse.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
     public void bar1() {
         // 1000 lines of code
@@ -610,18 +617,19 @@ public class Foo {
     </rule>
 
     <rule name="ExcessiveImports"
+          language="java"
           since="1.04"
           message="A high number of imports can indicate a high degree of coupling within an object."
           class="net.sourceforge.pmd.lang.java.rule.design.ExcessiveImportsRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#excessiveimports">
         <description>
-A high number of imports can indicate a high degree of coupling within an object. This rule 
-counts the number of unique imports and reports a violation if the count is above the 
-user-specified threshold.
+            A high number of imports can indicate a high degree of coupling within an object. This rule
+            counts the number of unique imports and reports a violation if the count is above the
+            user-specified threshold.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 import blah.blah.Baz;
 import blah.blah.Bif;
 // 18 others from the same package elided
@@ -633,19 +641,20 @@ public class Foo {
     </rule>
 
     <rule name="ExcessiveMethodLength"
+          language="java"
           since="0.6"
           message="Avoid really long methods."
           class="net.sourceforge.pmd.lang.java.rule.design.ExcessiveMethodLengthRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#excessivemethodlength">
         <description>
-When methods are excessively long this usually indicates that the method is doing more than its
-name/signature might suggest. They also become challenging for others to digest since excessive 
-scrolling causes readers to lose focus.
-Try to reduce the method length by creating helper methods and removing any copy/pasted code.
+            When methods are excessively long this usually indicates that the method is doing more than its
+            name/signature might suggest. They also become challenging for others to digest since excessive
+            scrolling causes readers to lose focus.
+            Try to reduce the method length by creating helper methods and removing any copy/pasted code.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public void doSomething() {
     System.out.println("Hello world!");
     System.out.println("Hello world!");
@@ -656,23 +665,24 @@ public void doSomething() {
     </rule>
 
     <rule name="ExcessiveParameterList"
+          language="java"
           since="0.9"
           message="Avoid long parameter lists."
           class="net.sourceforge.pmd.lang.java.rule.design.ExcessiveParameterListRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#excessiveparameterlist">
         <description>
-Methods with numerous parameters are a challenge to maintain, especially if most of them share the
-same datatype. These situations usually denote the need for new objects to wrap the numerous parameters.
+            Methods with numerous parameters are a challenge to maintain, especially if most of them share the
+            same datatype. These situations usually denote the need for new objects to wrap the numerous parameters.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public void addPerson(      // too many arguments liable to be mixed up
     int birthYear, int birthMonth, int birthDate, int height, int weight, int ssn) {
 
     . . . .
 }
- 
+
 public void addPerson(      // preferred approach
     Date birthdate, BodyMeasurements measurements, int ssn) {
 
@@ -683,19 +693,20 @@ public void addPerson(      // preferred approach
     </rule>
 
     <rule name="ExcessivePublicCount"
+          language="java"
           since="1.04"
           message="This class has a bunch of public methods and attributes"
           class="net.sourceforge.pmd.lang.java.rule.design.ExcessivePublicCountRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#excessivepubliccount">
         <description>
-Classes with large numbers of public methods and attributes require disproportionate testing efforts
-since combinational side effects grow rapidly and increase risk. Refactoring these classes into
-smaller ones not only increases testability and reliability but also allows new variations to be
-developed easily.
+            Classes with large numbers of public methods and attributes require disproportionate testing efforts
+            since combinational side effects grow rapidly and increase risk. Refactoring these classes into
+            smaller ones not only increases testability and reliability but also allows new variations to be
+            developed easily.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
     public String value;
     public Bar something;
@@ -718,16 +729,17 @@ public class Foo {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#finalfieldcouldbestatic">
         <description>
-If a final field is assigned to a compile-time constant, it could be made static, thus saving overhead
-in each object at runtime.
+            If a final field is assigned to a compile-time constant, it could be made static, thus saving overhead
+            in each object at runtime.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //FieldDeclaration
- [@Final='true' and @Static='false']
+ [@Final= true() and @Static= false()]
    /VariableDeclarator/VariableInitializer/Expression
     /PrimaryExpression[not(PrimarySuffix)]/PrimaryPrefix/Literal
 ]]>
@@ -735,7 +747,7 @@ in each object at runtime.
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
   public final int BAR = 42; // this could be static and save some space
 }
@@ -750,32 +762,36 @@ public class Foo {
           class="net.sourceforge.pmd.lang.java.rule.design.GodClassRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#godclass">
         <description>
-The God Class rule detects the God Class design flaw using metrics. God classes do too many things,
-are very big and overly complex. They should be split apart to be more object-oriented.
-The rule uses the detection strategy described in "Object-Oriented Metrics in Practice".
-The violations are reported against the entire class.
+            The God Class rule detects the God Class design flaw using metrics. God classes do too many things,
+            are very big and overly complex. They should be split apart to be more object-oriented.
+            The rule uses the detection strategy described in "Object-Oriented Metrics in Practice".
+            The violations are reported against the entire class.
 
-See also the references:
+            See also the references:
 
-Michele Lanza and Radu Marinescu. Object-Oriented Metrics in Practice:
-Using Software Metrics to Characterize, Evaluate, and Improve the Design
-of Object-Oriented Systems. Springer, Berlin, 1 edition, October 2006. Page 80.
+            Michele Lanza and Radu Marinescu. Object-Oriented Metrics in Practice:
+            Using Software Metrics to Characterize, Evaluate, and Improve the Design
+            of Object-Oriented Systems. Springer, Berlin, 1 edition, October 2006. Page 80.
         </description>
         <priority>3</priority>
     </rule>
 
     <rule name="ImmutableField"
+          language="java"
           since="2.0"
           message="Private field ''{0}'' could be made final; it is only initialized in the declaration or constructor."
           class="net.sourceforge.pmd.lang.java.rule.design.ImmutableFieldRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#immutablefield">
         <description>
-Identifies private fields whose values never change once object initialization ends either in the declaration
-of the field or by a constructor.  This helps in converting existing classes to becoming immutable ones.
+            Identifies private fields whose values never change once object initialization ends either in the declaration
+            of the field or by a constructor. This helps in converting existing classes to becoming immutable ones.
+            Note that this rule does not enforce referenced object to be immutable itself. A class can still be mutable, even
+            if all its member fields are declared final. This is referred to as shallow immutability. For more information on
+            mutability, see Effective Java, 3rd Edition, Item 17: Minimize mutability.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
   private int x; // could be final
   public Foo() {
@@ -796,19 +812,19 @@ public class Foo {
           class="net.sourceforge.pmd.lang.java.rule.design.LawOfDemeterRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#lawofdemeter">
         <description>
-The Law of Demeter is a simple rule, that says "only talk to friends". It helps to reduce coupling between classes
-or objects.
+            The Law of Demeter is a simple rule, that says "only talk to friends". It helps to reduce coupling between classes
+            or objects.
 
-See also the references:
+            See also the references:
 
-*   Andrew Hunt, David Thomas, and Ward Cunningham. The Pragmatic Programmer. From Journeyman to Master. Addison-Wesley Longman, Amsterdam, October 1999.;
-*   K.J. Lieberherr and I.M. Holland. Assuring good style for object-oriented programs. Software, IEEE, 6(5):38–48, 1989.;
-*   &lt;http://www.ccs.neu.edu/home/lieber/LoD.html>
-*   &lt;http://en.wikipedia.org/wiki/Law_of_Demeter>
+            *   Andrew Hunt, David Thomas, and Ward Cunningham. The Pragmatic Programmer. From Journeyman to Master. Addison-Wesley Longman, Amsterdam, October 1999.;
+            *   K.J. Lieberherr and I.M. Holland. Assuring good style for object-oriented programs. Software, IEEE, 6(5):38–48, 1989.;
+            *   &lt;http://www.ccs.neu.edu/home/lieber/LoD.html>
+            *   &lt;http://en.wikipedia.org/wiki/Law_of_Demeter>
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
     /**
      * This example will result in two violations.
@@ -827,7 +843,7 @@ public class Foo {
         // a constructor call, not a method call.
         D d = new D();
         // this method call is ok, because we have create the new instance of D locally.
-        d.doSomethingElse(); 
+        d.doSomethingElse();
     }
 }
 ]]>
@@ -841,20 +857,21 @@ public class Foo {
           message="Use opposite operator instead of the logic complement operator."
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#logicinversion">
         <description>
-Use opposite operator instead of negating the whole expression with a logic complement operator.
+            Use opposite operator instead of negating the whole expression with a logic complement operator.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //UnaryExpressionNotPlusMinus[@Image='!']/PrimaryExpression/PrimaryPrefix/Expression[EqualityExpression or RelationalExpression]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public boolean bar(int a, int b) {
 
     if (!(a == b)) { // use !=
@@ -872,17 +889,18 @@ public boolean bar(int a, int b) {
     </rule>
 
     <rule name="LoosePackageCoupling"
+          language="java"
           since="5.0"
           message="Use of ''{0}'' outside of package hierarchy ''{1}'' is not recommended; use recommended classes instead"
           class="net.sourceforge.pmd.lang.java.rule.design.LoosePackageCouplingRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#loosepackagecoupling">
         <description>
-Avoid using classes from the configured package hierarchy outside of the package hierarchy, 
-except when using one of the configured allowed classes.
+            Avoid using classes from the configured package hierarchy outside of the package hierarchy,
+            except when using one of the configured allowed classes.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 package some.package;
 
 import some.other.package.subpackage.subsubpackage.DontUseThisClass;
@@ -895,24 +913,25 @@ public class Bar {
     </rule>
 
     <rule name="ModifiedCyclomaticComplexity"
+          language="java"
           since="5.1.2"
           message = "The {0} ''{1}'' has a Modified Cyclomatic Complexity of {2}."
           class="net.sourceforge.pmd.lang.java.rule.design.ModifiedCyclomaticComplexityRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#modifiedcyclomaticcomplexity"
           deprecated="true">
         <description>
-Complexity directly affects maintenance costs is determined by the number of decision points in a method 
-plus one for the method entry.  The decision points include 'if', 'while', 'for', and 'case labels' calls.  
-Generally, numbers ranging from 1-4 denote low complexity, 5-7 denote moderate complexity, 8-10 denote
-high complexity, and 11+ is very high complexity. Modified complexity treats switch statements as a single
-decision point.
+            Complexity directly affects maintenance costs is determined by the number of decision points in a method
+            plus one for the method entry.  The decision points include 'if', 'while', 'for', and 'case labels' calls.
+            Generally, numbers ranging from 1-4 denote low complexity, 5-7 denote moderate complexity, 8-10 denote
+            high complexity, and 11+ is very high complexity. Modified complexity treats switch statements as a single
+            decision point.
 
-This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
-by the rule {% rule java/design/CyclomaticComplexity %}.
+            This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
+            by the rule {% rule java/design/CyclomaticComplexity %}.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {    // This has a Cyclomatic Complexity = 9
 1   public void example()  {
 2       if (a == b)  {
@@ -954,22 +973,23 @@ public class Foo {    // This has a Cyclomatic Complexity = 9
     </rule>
 
     <rule name="NcssConstructorCount"
+          language="java"
           message="The constructor with {0} parameters has an NCSS line count of {1}"
           since="3.9"
           deprecated="true"
           class="net.sourceforge.pmd.lang.java.rule.design.NcssConstructorCountRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#ncssconstructorcount">
         <description>
-This rule uses the NCSS (Non-Commenting Source Statements) algorithm to determine the number of lines
-of code for a given constructor. NCSS ignores comments, and counts actual statements. Using this algorithm,
-lines of code that are split are counted as one.
+            This rule uses the NCSS (Non-Commenting Source Statements) algorithm to determine the number of lines
+            of code for a given constructor. NCSS ignores comments, and counts actual statements. Using this algorithm,
+            lines of code that are split are counted as one.
 
-This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
-by the rule {% rule java/design/NcssCount %}.
+            This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
+            by the rule {% rule java/design/NcssCount %}.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo extends Bar {
     public Foo() {
         super();
@@ -987,19 +1007,20 @@ public class Foo extends Bar {
     </rule>
 
     <rule name="NcssCount"
+          language="java"
           message="The {0} ''{1}'' has a NCSS line count of {2}."
           since="6.0.0"
           class="net.sourceforge.pmd.lang.java.rule.design.NcssCountRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#ncsscount">
         <description>
-This rule uses the NCSS (Non-Commenting Source Statements) metric to determine the number of lines
-of code in a class, method or constructor. NCSS ignores comments, blank lines, and only counts actual
-statements. For more details on the calculation, see the documentation of
-the [NCSS metric](pmd_java_metrics_index.html#non-commenting-source-statements-ncss).
+            This rule uses the NCSS (Non-Commenting Source Statements) metric to determine the number of lines
+            of code in a class, method or constructor. NCSS ignores comments, blank lines, and only counts actual
+            statements. For more details on the calculation, see the documentation of
+            the [NCSS metric](pmd_java_metrics_index.html#non-commenting-source-statements-ncss).
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 import java.util.Collections;       // +0
 import java.io.IOException;         // +0
 
@@ -1030,22 +1051,23 @@ class Foo {                         // +1, total Ncss = 12
     </rule>
 
     <rule name="NcssMethodCount"
+          language="java"
           message="The method {0}() has an NCSS line count of {1}"
           deprecated="true"
           since="3.9"
           class="net.sourceforge.pmd.lang.java.rule.design.NcssMethodCountRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#ncssmethodcount">
         <description>
-This rule uses the NCSS (Non-Commenting Source Statements) algorithm to determine the number of lines
-of code for a given method. NCSS ignores comments, and counts actual statements. Using this algorithm,
-lines of code that are split are counted as one.
+            This rule uses the NCSS (Non-Commenting Source Statements) algorithm to determine the number of lines
+            of code for a given method. NCSS ignores comments, and counts actual statements. Using this algorithm,
+            lines of code that are split are counted as one.
 
-This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
-by the rule {% rule java/design/NcssCount %}.
+            This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
+            by the rule {% rule java/design/NcssCount %}.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo extends Bar {
     public int methd() {
         super.methd();
@@ -1064,22 +1086,23 @@ public class Foo extends Bar {
     </rule>
 
     <rule name="NcssTypeCount"
+          language="java"
           message="The type has an NCSS line count of {0}"
           since="3.9"
           deprecated="true"
           class="net.sourceforge.pmd.lang.java.rule.design.NcssTypeCountRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#ncsstypecount">
         <description>
-This rule uses the NCSS (Non-Commenting Source Statements) algorithm to determine the number of lines
-of code for a given type. NCSS ignores comments, and counts actual statements. Using this algorithm,
-lines of code that are split are counted as one.
+            This rule uses the NCSS (Non-Commenting Source Statements) algorithm to determine the number of lines
+            of code for a given type. NCSS ignores comments, and counts actual statements. Using this algorithm,
+            lines of code that are split are counted as one.
 
-This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
-by the rule {% rule java/design/NcssCount %}.
+            This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
+            by the rule {% rule java/design/NcssCount %}.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo extends Bar {
     public Foo() {
         //this class only has 6 NCSS lines
@@ -1097,19 +1120,20 @@ public class Foo extends Bar {
     </rule>
 
     <rule name="NPathComplexity"
+          language="java"
           since="3.9"
-          message="The {0} ''{1}'' has an NPath complexity of {2}"
+          message="The {0} ''{1}'' has an NPath complexity of {2}, current threshold is {3}"
           class="net.sourceforge.pmd.lang.java.rule.design.NPathComplexityRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#npathcomplexity">
         <description>
-The NPath complexity of a method is the number of acyclic execution paths through that method.
-While cyclomatic complexity counts the number of decision points in a method, NPath counts the number of
-full paths from the beginning to the end of the block of the method. That metric grows exponentially, as
-it multiplies the complexity of statements in the same block. For more details on the calculation, see the
-documentation of the [NPath metric](pmd_java_metrics_index.html#npath-complexity-npath).
+            The NPath complexity of a method is the number of acyclic execution paths through that method.
+            While cyclomatic complexity counts the number of decision points in a method, NPath counts the number of
+            full paths from the beginning to the end of the block of the method. That metric grows exponentially, as
+            it multiplies the complexity of statements in the same block. For more details on the calculation, see the
+            documentation of the [NPath metric](pmd_java_metrics_index.html#npath-complexity-npath).
 
-A threshold of 200 is generally considered the point where measures should be taken to reduce
-complexity and increase readability.
+            A threshold of 200 is generally considered the point where measures should be taken to reduce
+            complexity and increase readability.
         </description>
         <priority>3</priority>
         <example>
@@ -1153,20 +1177,21 @@ public class Foo {
     </rule>
 
     <rule name="SignatureDeclareThrowsException"
+          language="java"
           since="1.2"
           message="A method/constructor should not explicitly throw java.lang.Exception"
           class="net.sourceforge.pmd.lang.java.rule.design.SignatureDeclareThrowsExceptionRule"
           typeResolution="true"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#signaturedeclarethrowsexception">
         <description>
-A method/constructor shouldn't explicitly throw the generic java.lang.Exception, since it
-is unclear which exceptions that can be thrown from the methods. It might be
-difficult to document and understand such vague interfaces. Use either a class
-derived from RuntimeException or a checked exception.
+            A method/constructor shouldn't explicitly throw the generic java.lang.Exception, since it
+            is unclear which exceptions that can be thrown from the methods. It might be
+            difficult to document and understand such vague interfaces. Use either a class
+            derived from RuntimeException or a checked exception.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public void foo() throws Exception {
 }
 ]]>
@@ -1180,7 +1205,7 @@ public void foo() throws Exception {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#simplifiedternary">
         <description>
-<![CDATA[
+            <![CDATA[
 Look for ternary operators with the form `condition ? literalBoolean : foo`
 or `condition ? foo : literalBoolean`.
 
@@ -1194,9 +1219,10 @@ or
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //ConditionalExpression[not(PrimaryExpression/*/Literal) and (Expression/PrimaryExpression/*/Literal/BooleanLiteral)]
 |
 //ConditionalExpression[not(Expression/PrimaryExpression/*/Literal) and (PrimaryExpression/*/Literal/BooleanLiteral)]
@@ -1205,7 +1231,7 @@ or
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
     public boolean test() {
         return condition ? true : something(); // can be as simple as return condition || something();
@@ -1235,43 +1261,47 @@ public class Foo {
           typeResolution="true"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#simplifybooleanassertion">
         <description>
-Avoid negation in an assertTrue or assertFalse test.
+            Avoid negation in an assertTrue or assertFalse test.
 
-For example, rephrase:
+            For example, rephrase:
 
-    assertTrue(!expr);
+            assertTrue(!expr);
 
-as:
+            as:
 
-    assertFalse(expr);
+            assertFalse(expr);
 
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
+//ClassOrInterfaceDeclaration[
+    pmd-java:typeIs('junit.framework.TestCase')
+    or .//MarkerAnnotation/Name[
+        pmd-java:typeIs('org.junit.Test')
+        or pmd-java:typeIs('org.junit.jupiter.api.Test')
+        or pmd-java:typeIs('org.junit.jupiter.api.RepeatedTest')
+        or pmd-java:typeIs('org.junit.jupiter.api.TestFactory')
+        or pmd-java:typeIs('org.junit.jupiter.api.TestTemplate')
+        or pmd-java:typeIs('org.junit.jupiter.params.ParameterizedTest')
+        ]
+    ]
 //StatementExpression
 [
-.//Name[@Image='assertTrue' or  @Image='assertFalse']
-and
-PrimaryExpression/PrimarySuffix/Arguments/ArgumentList
- /Expression/UnaryExpressionNotPlusMinus[@Image='!']
-/PrimaryExpression/PrimaryPrefix
+    .//Name[@Image='assertTrue' or  @Image='assertFalse']
+    and
+    PrimaryExpression/PrimarySuffix/Arguments/ArgumentList/Expression/UnaryExpressionNotPlusMinus[@Image='!']
+        /PrimaryExpression/PrimaryPrefix
 ]
-[ancestor::ClassOrInterfaceDeclaration[//ClassOrInterfaceType[pmd-java:typeIs('junit.framework.TestCase')]
-    or //MarkerAnnotation/Name[
-        pmd-java:typeIs('org.junit.Test')
-        or pmd-java:typeIs('org.junit.jupiter.api.Test') or pmd-java:typeIs('org.junit.jupiter.api.RepeatedTest')
-        or pmd-java:typeIs('org.junit.jupiter.api.TestFactory') or pmd-java:typeIs('org.junit.jupiter.api.TestTemplate')
-        or pmd-java:typeIs('org.junit.jupiter.params.ParameterizedTest')
-    ]
-]]]]>
+]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class SimpleTest extends TestCase {
     public void testX() {
         assertTrue("not empty", !r.isEmpty());  // replace with assertFalse("not empty", r.isEmpty())
@@ -1289,13 +1319,14 @@ public class SimpleTest extends TestCase {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#simplifybooleanexpressions">
         <description>
-Avoid unnecessary comparisons in boolean expressions, they serve no purpose and impacts readability.
+            Avoid unnecessary comparisons in boolean expressions, they serve no purpose and impacts readability.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //EqualityExpression/PrimaryExpression
  /PrimaryPrefix/Literal/BooleanLiteral
 ]]>
@@ -1303,7 +1334,7 @@ Avoid unnecessary comparisons in boolean expressions, they serve no purpose and 
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Bar {
   // can be simplified to
   // bar = isFoo();
@@ -1316,17 +1347,18 @@ public class Bar {
     </rule>
 
     <rule name="SimplifyBooleanReturns"
+          language="java"
           since="0.9"
           message="Avoid unnecessary if..then..else statements when returning booleans"
           class="net.sourceforge.pmd.lang.java.rule.design.SimplifyBooleanReturnsRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#simplifybooleanreturns">
         <description>
-Avoid unnecessary if-then-else statements when returning a boolean. The result of
-the conditional test can be returned instead.
+            Avoid unnecessary if-then-else statements when returning a boolean. The result of
+            the conditional test can be returned instead.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public boolean isBarEqualTo(int x) {
     if (bar == x) {      // this bit of code...
         return true;
@@ -1349,13 +1381,14 @@ public boolean isBarEqualTo(int x) {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#simplifyconditional">
         <description>
-No need to check for null before an instanceof; the instanceof keyword returns false when given a null argument.
+            No need to check for null before an instanceof; the instanceof keyword returns false when given a null argument.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
+                    <![CDATA[
 //Expression
  [ConditionalOrExpression
  [EqualityExpression[@Image='==']
@@ -1373,7 +1406,7 @@ ConditionalAndExpression
  [EqualityExpression[@Image='!=']//NullLiteral
  and
 InstanceOfExpression
- [PrimaryExpression[count(PrimarySuffix[@ArrayDereference='true'])=0]
+ [PrimaryExpression[not(PrimarySuffix[@ArrayDereference= true()])]
   //Name[not(contains(@Image,'.'))]/@Image = ancestor::ConditionalAndExpression
    /EqualityExpression/PrimaryExpression/PrimaryPrefix/Name/@Image]
  and
@@ -1385,7 +1418,7 @@ InstanceOfExpression
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 class Foo {
   void bar(Object x) {
     if (x != null && x instanceof Bar) {
@@ -1398,18 +1431,19 @@ class Foo {
     </rule>
 
     <rule name="SingularField"
+          language="java"
           since="3.1"
           message="Perhaps ''{0}'' could be replaced by a local variable."
           class="net.sourceforge.pmd.lang.java.rule.design.SingularFieldRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#singularfield">
         <description>
-Fields whose scopes are limited to just single methods do not rely on the containing
-object to provide them to other methods. They may be better implemented as local variables
-within those methods.
+            Fields whose scopes are limited to just single methods do not rely on the containing
+            object to provide them to other methods. They may be better implemented as local variables
+            within those methods.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
     private int x;  // no reason to exist at the Foo instance level
     public void foo(int y) {
@@ -1422,23 +1456,24 @@ public class Foo {
     </rule>
 
     <rule name="StdCyclomaticComplexity"
+          language="java"
           since="5.1.2"
           message = "The {0} ''{1}'' has a Standard Cyclomatic Complexity of {2}."
           class="net.sourceforge.pmd.lang.java.rule.design.StdCyclomaticComplexityRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#stdcyclomaticcomplexity"
           deprecated="true">
         <description>
-Complexity directly affects maintenance costs is determined by the number of decision points in a method 
-plus one for the method entry.  The decision points include 'if', 'while', 'for', and 'case labels' calls.  
-Generally, numbers ranging from 1-4 denote low complexity, 5-7 denote moderate complexity, 8-10 denote
-high complexity, and 11+ is very high complexity.
+            Complexity directly affects maintenance costs is determined by the number of decision points in a method
+            plus one for the method entry.  The decision points include 'if', 'while', 'for', and 'case labels' calls.
+            Generally, numbers ranging from 1-4 denote low complexity, 5-7 denote moderate complexity, 8-10 denote
+            high complexity, and 11+ is very high complexity.
 
-This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
-by the rule {% rule java/design/CyclomaticComplexity %}.
+            This rule is deprecated and will be removed with PMD 7.0.0. The rule is replaced
+            by the rule {% rule java/design/CyclomaticComplexity %}.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {    // This has a Cyclomatic Complexity = 12
 1   public void example()  {
 2       if (a == b || (c == d && e == f))  { // Only one
@@ -1480,18 +1515,19 @@ public class Foo {    // This has a Cyclomatic Complexity = 12
     </rule>
 
     <rule name="SwitchDensity"
+          language="java"
           since="1.02"
           message="A high ratio of statements to labels in a switch statement.  Consider refactoring."
           class="net.sourceforge.pmd.lang.java.rule.design.SwitchDensityRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#switchdensity">
         <description>
-A high ratio of statements to labels in a switch statement implies that the switch statement
-is overloaded.  Consider moving the statements into new methods or creating subclasses based
-on the switch variable.
+            A high ratio of statements to labels in a switch statement implies that the switch statement
+            is overloaded.  Consider moving the statements into new methods or creating subclasses based
+            on the switch variable.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Foo {
   public void bar(int x) {
     switch (x) {
@@ -1510,18 +1546,19 @@ public class Foo {
     </rule>
 
     <rule name="TooManyFields"
+          language="java"
           since="3.0"
           message="Too many fields"
           class="net.sourceforge.pmd.lang.java.rule.design.TooManyFieldsRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#toomanyfields">
         <description>
-Classes that have too many fields can become unwieldy and could be redesigned to have fewer fields,
-possibly through grouping related fields in new objects.  For example, a class with individual 
-city/state/zip fields could park them within a single Address field.
+            Classes that have too many fields can become unwieldy and could be redesigned to have fewer fields,
+            possibly through grouping related fields in new objects.  For example, a class with individual
+            city/state/zip fields could park them within a single Address field.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class Person {   // too many separate fields
    int birthYear;
    int birthMonth;
@@ -1545,23 +1582,24 @@ public class Person {   // this is more manageable
           message="This class has too many methods, consider refactoring it."
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#toomanymethods">
         <description>
-A class with too many methods is probably a good suspect for refactoring, in order to reduce its
-complexity and find a way to have more fine grained objects.
+            A class with too many methods is probably a good suspect for refactoring, in order to reduce its
+            complexity and find a way to have more fine grained objects.
         </description>
         <priority>3</priority>
         <properties>
             <property name="maxmethods" type="Integer" description="The method count reporting threshold" min="1" max="1000" value="10"/>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
                     <!--  FIXME: Refine XPath to discard 'get' and 'set' methods with Block no more than 3 lines,
                                 something like this:
                                     not (
                                             (
-                                                starts-with(@Image,'get')
+                                                starts-with(@Name,'get')
                                                 or
-                                                starts-with(@Image,'set')
+                                                starts-with(@Name,'set')
                                                 or
-                                                starts-with(@Image,'is')
+                                                starts-with(@Name,'is')
                                             )
                                             and (
                                                     (
@@ -1571,18 +1609,18 @@ complexity and find a way to have more fine grained objects.
                                                     ) <= 3
                                             )
                                         )
-                                This will avoid discarding 'real' method...
+                                This will avoid discarding 'real' methods...
                      -->
-<![CDATA[
+                    <![CDATA[
  //ClassOrInterfaceDeclaration/ClassOrInterfaceBody
      [
-      count(./ClassOrInterfaceBodyDeclaration/MethodDeclaration/MethodDeclarator[
+      count(./ClassOrInterfaceBodyDeclaration/MethodDeclaration[
          not (
-                starts-with(@Image,'get')
+                starts-with(@Name,'get')
                 or
-                starts-with(@Image,'set')
+                starts-with(@Name,'set')
                 or
-                starts-with(@Image,'is')
+                starts-with(@Name,'is')
             )
       ]) > $maxmethods
    ]
@@ -1593,16 +1631,17 @@ complexity and find a way to have more fine grained objects.
     </rule>
 
     <rule name="UselessOverridingMethod"
+          language="java"
           since="3.3"
           message="Overriding method merely calls super"
           class="net.sourceforge.pmd.lang.java.rule.design.UselessOverridingMethodRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#uselessoverridingmethod">
         <description>
-The overriding method merely calls the same method defined in a superclass.
+            The overriding method merely calls the same method defined in a superclass.
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public void foo(String bar) {
     super.foo(bar);      // why bother overriding?
 }
@@ -1626,27 +1665,28 @@ public Long getId() {
           class="net.sourceforge.pmd.lang.rule.XPathRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#useobjectforclearerapi">
         <description>
-When you write a public method, you should be thinking in terms of an API. If your method is public, it means other class
-will use it, therefore, you want (or need) to offer a comprehensive and evolutive API. If you pass a lot of information
-as a simple series of Strings, you may think of using an Object to represent all those information. You'll get a simpler
-API (such as doWork(Workload workload), rather than a tedious series of Strings) and more importantly, if you need at some
-point to pass extra data, you'll be able to do so by simply modifying or extending Workload without any modification to
-your API.
+            When you write a public method, you should be thinking in terms of an API. If your method is public, it means other class
+            will use it, therefore, you want (or need) to offer a comprehensive and evolutive API. If you pass a lot of information
+            as a simple series of Strings, you may think of using an Object to represent all those information. You'll get a simpler
+            API (such as doWork(Workload workload), rather than a tedious series of Strings) and more importantly, if you need at some
+            point to pass extra data, you'll be able to do so by simply modifying or extending Workload without any modification to
+            your API.
         </description>
         <priority>3</priority>
         <properties>
+            <property name="version" value="2.0"/>
             <property name="xpath">
                 <value>
-<![CDATA[
-//MethodDeclaration[@Public = 'true']/MethodDeclarator/FormalParameters[
-     count(FormalParameter/Type/ReferenceType/ClassOrInterfaceType[@Image = 'String' and @Array = 'false']) > 3
+                    <![CDATA[
+//MethodDeclaration[@Public=true()]/MethodDeclarator/FormalParameters[
+     count(FormalParameter/Type/ReferenceType/ClassOrInterfaceType[@Image = 'String' and @Array=false()]) > 3
 ]
 ]]>
                 </value>
             </property>
         </properties>
         <example>
-<![CDATA[
+            <![CDATA[
 public class MyClass {
     public void connect(String username,
         String pssd,
@@ -1665,20 +1705,21 @@ public class MyClass {
     </rule>
 
     <rule name="UseUtilityClass"
+          language="java"
           since="0.3"
           message="All methods are static.  Consider using a utility class instead. Alternatively, you could add a private constructor or make the class abstract to silence this warning."
           class="net.sourceforge.pmd.lang.java.rule.design.UseUtilityClassRule"
           externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_design.html#useutilityclass">
         <description>
-For classes that only have static methods, consider making them utility classes.
-Note that this doesn't apply to abstract classes, since their subclasses may
-well include non-static methods.  Also, if you want this class to be a utility class,
-remember to add a private constructor to prevent instantiation.
-(Note, that this use was known before PMD 5.1.0 as UseSingleton).
+            For classes that only have static methods, consider making them utility classes.
+            Note that this doesn't apply to abstract classes, since their subclasses may
+            well include non-static methods.  Also, if you want this class to be a utility class,
+            remember to add a private constructor to prevent instantiation.
+            (Note, that this use was known before PMD 5.1.0 as UseSingleton).
         </description>
         <priority>3</priority>
         <example>
-<![CDATA[
+            <![CDATA[
 public class MaybeAUtility {
   public static void foo() {}
   public static void bar() {}
