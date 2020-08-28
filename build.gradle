@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'maven'
+    id 'maven-publish'
     id 'eclipse'
     id 'jacoco'
     id 'pmd'
@@ -38,46 +38,46 @@ configurations {
     }
     testRuntime {
         description 'Customized runtime for unit tests'
-        extendsFrom testCompile, owbTestRuntime
+        extendsFrom testImplementation, owbTestRuntime
         //extendsFrom testCompile, weldTestRuntime
     }
 }
 
 dependencies {
     //CDI API
-    compile group: 'javax.enterprise', name: 'cdi-api', version: cdiVersion
-    
+    implementation group: 'javax.enterprise', name: 'cdi-api', version: cdiVersion
+
     //Bean Validation
-    compile group: 'javax.validation', name: 'validation-api', version: beanValidationVersion
-    testRuntime group: 'org.apache.bval', name: 'org.apache.bval.bundle', version: bvalVersion 
-    testRuntime group: 'org.apache.commons', name: 'commons-lang3', version: commonsLang3Version
-    
+    implementation group: 'javax.validation', name: 'validation-api', version: beanValidationVersion
+    testRuntimeOnly group: 'org.apache.bval', name: 'org.apache.bval.bundle', version: bvalVersion
+    testRuntimeOnly group: 'org.apache.commons', name: 'commons-lang3', version: commonsLang3Version
+
     //Logging with slf4j
-    compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
-    testRuntime group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
-	
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
+    testRuntimeOnly group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
+
     //Unit testing
-    testCompile group: 'junit', name: 'junit', version: junitVersion
-    testCompile group: 'org.assertj', name: 'assertj-core', version: assertjVersion     
-    testCompile group: 'org.mockito', name: 'mockito-all', version: mockitoVersion
-    
+    testImplementation group: 'junit', name: 'junit', version: junitVersion
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: assertjVersion
+    testImplementation group: 'org.mockito', name: 'mockito-all', version: mockitoVersion
+
     //Apache Deltaspike CdiCtrl
-    testCompile group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-api', version: deltaspikeVersion
-    testRuntime group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion
-    testRuntime group: 'org.apache.deltaspike.core', name: 'deltaspike-core-impl', version: deltaspikeVersion
+    testImplementation group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-api', version: deltaspikeVersion
+    testRuntimeOnly group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion
+    testRuntimeOnly group: 'org.apache.deltaspike.core', name: 'deltaspike-core-impl', version: deltaspikeVersion
 
     //Apache OpenWebbeans CDI Container
     owbTestRuntime group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion
     owbTestRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: owbVersion
     owbTestRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: owbVersion
-    
+
     //Annotations Api needed with Apache OpenWebBeans 1.5.0
     owbTestRuntime group: 'javax.annotation', name: 'javax.annotation-api', version: annotationsVersion
-    
+
     //JBoss Weld CDI Container
     weldTestRuntime group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion
     weldTestRuntime group: 'org.jboss.weld.se', name: 'weld-se-shaded', version: weldVersion
-    
+
     //MyFaces + Servlet API needed for clean test run with weld
     weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl-test', version: myfacesVersion
     weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl', version: myfacesVersion
@@ -105,13 +105,13 @@ sourceSets {
         resources {
             srcDirs = ["src/test/resources"]
         }
-    }	
+    }
 }
 
 //Run tests if project has property runTests
 test.onlyIf { project.hasProperty('runTests') }
 
-//Enable/Disable unit tests in build 
+//Enable/Disable unit tests in build
 test.enabled = true
 
 //Configure unit tests
@@ -178,7 +178,7 @@ checkstyleTest.onlyIf { project.hasProperty('runChecks') }
 checkstyle {
     ignoreFailures = true
     showViolations = false
-    //sourceSets = [sourceSets.main, sourceSets.test]        
+    //sourceSets = [sourceSets.main, sourceSets.test]
     configFile = file("$project.projectDir/config/checkstyle/checkstyle.xml")
 }
 
@@ -226,10 +226,8 @@ spotbugs  {
     ignoreFailures = true
     effort = 'max'
     reportLevel = 'high'
-    
+
 }
-
-
 
 //Jacoco Configuration
 //Generate Java Code Coverage artefacts with tests1
@@ -237,7 +235,7 @@ test {
     jacoco {
         destinationFile = file("$project.buildDir/jacoco/jacocoTest.exec")
         classDumpDir = file("$project.buildDir/jacoco/classpathdumps")
-    }    
+    }
 }
 
 jacoco {
@@ -263,12 +261,12 @@ jacocoTestReport {
 
     //additionalSourceDirs = files(['test/java', 'src/java-test'])
     //additionalClassDirs = files(['build/jacoco/UT/classpathdumps/com/abc/xyz', 'build/jacoco/IT/classpathdumps/com/abc/xyz'])
-    
+
     //sourceDirectories = files('src/main/java')
     //classDirectories = files('build/classes/main')
 
     //sourceDirectories = fileTree('src/main/java')
-    //classDirectories = fileTree('build/classes/main')    
+    //classDirectories = fileTree('build/classes/main')
 }
 
 task listTasks {
@@ -285,8 +283,8 @@ task listConfigurations  {
         description = 'List available gradle Configurations'
         group = 'Information'
         configurations.each { conf -> println conf.name }
-    
-    } 
+
+    }
 }
 
 //Tasks providing project information
@@ -295,7 +293,7 @@ task listSourceSets {
         description = 'List available gradle SourceSets'
         group = 'Information'
         sourceSets.each { ss -> println ss.name }
-    } 
+    }
 }
 
 task listDependencies {
