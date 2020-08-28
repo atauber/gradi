@@ -21,6 +21,7 @@ public class TracedInterceptor {
     /**
      * Logger.
      */
+    @SuppressWarnings("PMD")
     @Inject
     private Logger logger;
 

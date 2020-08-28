@@ -664,7 +664,7 @@ boolean x = (y == Double.NaN);
 ]]>
         </example>
     </rule>
-
+    <!--
     <rule name="BeanMembersShouldSerialize"
           language="java"
           since="1.1"
@@ -695,6 +695,7 @@ private int getMoreFoo(){
 ]]>
         </example>
     </rule>
+    -->
 
     <rule name="BrokenNullCheck"
           language="java"

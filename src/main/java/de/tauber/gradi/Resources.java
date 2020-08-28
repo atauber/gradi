@@ -34,6 +34,7 @@ public class Resources {
      *
      * @return validator object
      */
+    @SuppressWarnings("PMD")
     @Produces
     public Validator produceValidator() {
         final ValidatorFactory validatorFactory = Validation.byDefaultProvider().configure().buildValidatorFactory();
