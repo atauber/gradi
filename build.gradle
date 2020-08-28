@@ -8,7 +8,7 @@ plugins {
     id 'project-report'
     id 'distribution'
     id 'build-dashboard'
-    id 'com.github.spotbugs' version '2.0.0'
+    id 'com.github.spotbugs-base' version '4.5.0'
 }
 
 defaultTasks 'build', 'htmlDependencyReport', 'jacocoTestReport'
@@ -222,14 +222,11 @@ pmd {
 //spotbugsMain.onlyIf { project.hasProperty('runChecks') }
 
 
-task spotbugs (type: com.github.spotbugs.SpotBugsTask) {
+spotbugs  {
     ignoreFailures = true
     effort = 'max'
     reportLevel = 'high'
-    spotbugsTest.enabled = false
-    reports {
-        xml.enabled = true
-    }
+    
 }
 
 
