@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
     id 'maven-publish'
     id 'eclipse'
     id 'jacoco'
@@ -9,6 +10,10 @@ plugins {
     id 'distribution'
     id 'build-dashboard'
     id 'com.github.spotbugs-base' version '5.2.1'
+}
+
+application {
+    mainClass = 'de.tauber.gradi.Main'
 }
 
 defaultTasks 'build', 'htmlDependencyReport', 'jacocoTestReport'
@@ -36,10 +41,6 @@ repositories {
 }
 
 configurations {
-    //No deltaspike-cdictrl-weld 2.0.0-SNAPSHOT available.
-    weldTestRuntime {
-        description 'Provides weld runtime to tests'
-    }
     owbTestRuntime {
         description 'Provides owb runtime to tests'
     }
@@ -53,6 +54,7 @@ configurations {
 dependencies {
     //CDI API
     implementation group: 'jakarta.enterprise', name: 'jakarta.enterprise.cdi-api', version: cdiVersion
+    implementation group: 'org.apache.openwebbeans', name: 'openwebbeans-se', version: owbVersion
 
     //Bean Validation
     implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: beanValidationVersion
@@ -61,7 +63,7 @@ dependencies {
 
     //Logging with slf4j
     implementation group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
-    testRuntimeOnly group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
 
     //Unit testing
     testImplementation group: 'junit', name: 'junit', version: junitVersion
@@ -80,17 +82,6 @@ dependencies {
 
     //Annotations Api needed with Apache OpenWebBeans 1.5.0
     owbTestRuntime group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: annotationsVersion
-
-    //JBoss Weld CDI Container
-    weldTestRuntime group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion
-    weldTestRuntime group: 'org.jboss.weld.se', name: 'weld-se-shaded', version: weldVersion
-
-    //MyFaces + Servlet API needed for clean test run with weld
-    //weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl-test', version: myfacesVersion
-    //weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl', version: myfacesVersion
-    //weldTestRuntime group: 'org.apache.myfaces.test', name: 'myfaces-test22', version: myfacesTest22Version
-    //weldTestRuntime group: 'javax.servlet', name: 'javax.servlet-api', version: servletApiVersion
-
 
 }
 

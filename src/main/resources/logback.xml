@@ -23,6 +23,10 @@
                 additivity="false">
         <appender-ref ref="FILE" />
     </logger>
+    <logger name="org.apache.webbeans" level="info"
+            additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
     <root level="debug">
         <appender-ref ref="STDOUT" />
     </root>
