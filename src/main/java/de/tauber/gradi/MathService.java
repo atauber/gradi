@@ -1,7 +1,7 @@
 package de.tauber.gradi;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
 /**
  * A Math Service that delegates to injected Services.

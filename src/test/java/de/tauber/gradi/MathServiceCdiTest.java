@@ -2,7 +2,7 @@ package de.tauber.gradi;
 
 import de.tauber.gradi.categories.IntegrationTests;
 import static org.assertj.core.api.Assertions.assertThat;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.BeforeClass;
 import org.junit.Test;

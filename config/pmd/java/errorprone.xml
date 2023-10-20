@@ -1094,28 +1094,6 @@ public class Bar {
         </example>
     </rule>
 
-    <rule name="CompareObjectsWithEquals"
-          language="java"
-          since="3.2"
-          message="Use equals() to compare object references."
-          class="net.sourceforge.pmd.lang.java.rule.errorprone.CompareObjectsWithEqualsRule"
-          externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_errorprone.html#compareobjectswithequals">
-        <description>
-            Use equals() to compare object references; avoid comparing them with ==.
-        </description>
-        <priority>3</priority>
-        <example>
-            <![CDATA[
-class Foo {
-  boolean bar(String a, String b) {
-    return a == b;
-  }
-}
-
-]]>
-        </example>
-    </rule>
-
     <rule name="ConstructorCallsOverridableMethod"
           language="java"
           since="1.04"
@@ -2523,29 +2501,6 @@ public class Foo {
   void foo() {}
 }
 
-]]>
-        </example>
-    </rule>
-
-    <rule name="MoreThanOneLogger"
-          language="java"
-          since="2.0"
-          message="Class contains more than one logger."
-          class="net.sourceforge.pmd.lang.java.rule.errorprone.MoreThanOneLoggerRule"
-          externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_errorprone.html#morethanonelogger">
-        <description>
-            Normally only one logger is used in each class. This rule supports slf4j, log4j, Java Util Logging and
-            log4j2 (since 6.19.0).
-        </description>
-        <priority>2</priority>
-        <example>
-            <![CDATA[
-public class Foo {
-    Logger log = Logger.getLogger(Foo.class.getName());
-    // It is very rare to see two loggers on a class, normally
-    // log information is multiplexed by levels
-    Logger log2= Logger.getLogger(Foo.class.getName());
-}
 ]]>
         </example>
     </rule>

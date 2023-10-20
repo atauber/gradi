@@ -1,6 +1,6 @@
 package de.tauber.gradi;
 
-import javax.enterprise.context.Dependent;
+import jakarta.enterprise.context.Dependent;
 
 /**
  * A Add Service to inject in Math Service.

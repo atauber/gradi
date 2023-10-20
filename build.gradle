@@ -8,13 +8,16 @@ plugins {
     id 'project-report'
     id 'distribution'
     id 'build-dashboard'
-    id 'com.github.spotbugs-base' version '4.5.0'
+    id 'com.github.spotbugs-base' version '5.2.1'
 }
 
 defaultTasks 'build', 'htmlDependencyReport', 'jacocoTestReport'
 
-sourceCompatibility = 11
-targetCompatibility = 11
+java {
+    //OWB 4.0.0 does not support Java 21
+    sourceCompatibility = 20
+    targetCompatibility = 20
+}
 
 println("group: " + group + ", project.name: " + project.name + ", version: " + version)
 println("description: " + description)
@@ -27,16 +30,20 @@ ext {
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://repository.apache.org/content/groups/snapshots'
+    }
 }
 
 configurations {
-    weldTestRuntime{
+    //No deltaspike-cdictrl-weld 2.0.0-SNAPSHOT available.
+    weldTestRuntime {
         description 'Provides weld runtime to tests'
     }
-    owbTestRuntime{
+    owbTestRuntime {
         description 'Provides owb runtime to tests'
     }
-    testRuntime {
+    testRuntimeOnly {
         description 'Customized runtime for unit tests'
         extendsFrom testImplementation, owbTestRuntime
         //extendsFrom testCompile, weldTestRuntime
@@ -45,10 +52,10 @@ configurations {
 
 dependencies {
     //CDI API
-    implementation group: 'javax.enterprise', name: 'cdi-api', version: cdiVersion
+    implementation group: 'jakarta.enterprise', name: 'jakarta.enterprise.cdi-api', version: cdiVersion
 
     //Bean Validation
-    implementation group: 'javax.validation', name: 'validation-api', version: beanValidationVersion
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: beanValidationVersion
     testRuntimeOnly group: 'org.apache.bval', name: 'org.apache.bval.bundle', version: bvalVersion
     testRuntimeOnly group: 'org.apache.commons', name: 'commons-lang3', version: commonsLang3Version
 
@@ -72,17 +79,17 @@ dependencies {
     owbTestRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: owbVersion
 
     //Annotations Api needed with Apache OpenWebBeans 1.5.0
-    owbTestRuntime group: 'javax.annotation', name: 'javax.annotation-api', version: annotationsVersion
+    owbTestRuntime group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: annotationsVersion
 
     //JBoss Weld CDI Container
     weldTestRuntime group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion
     weldTestRuntime group: 'org.jboss.weld.se', name: 'weld-se-shaded', version: weldVersion
 
     //MyFaces + Servlet API needed for clean test run with weld
-    weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl-test', version: myfacesVersion
-    weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl', version: myfacesVersion
-    weldTestRuntime group: 'org.apache.myfaces.test', name: 'myfaces-test22', version: myfacesTest22Version
-    weldTestRuntime group: 'javax.servlet', name: 'javax.servlet-api', version: servletApiVersion
+    //weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl-test', version: myfacesVersion
+    //weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl', version: myfacesVersion
+    //weldTestRuntime group: 'org.apache.myfaces.test', name: 'myfaces-test22', version: myfacesTest22Version
+    //weldTestRuntime group: 'javax.servlet', name: 'javax.servlet-api', version: servletApiVersion
 
 
 }
@@ -116,31 +123,34 @@ test.enabled = true
 
 //Configure unit tests
 test
-{
-    //Copy the CDI beans.xml before executing unit tests
-    doFirst {
-        copy {
-            from 'build/resources/main/META-INF/beans.xml'
-            into 'build/classes/main/META-INF/'
+        {
+            //Copy the CDI beans.xml before executing unit tests
+            doFirst {
+                copy {
+                    from 'build/resources/main/META-INF/beans.xml'
+                    into 'build/classes/main/META-INF/'
+                }
+            }
+            //Filter the unit tests to run
+            filter {
+                includeTestsMatching "de.tauber.*"
+            }
+            //Include/exclude test categories
+            useJUnit {
+                includeCategories 'de.tauber.gradi.categories.UnitTests',   \
+              'de.tauber.gradi.categories.IntegrationTests'
+                excludeCategories 'de.tauber.gradi.categories.SmokeTests'
+            }
+            jvmArgs "--add-opens=java.base/java.lang=ALL-UNNAMED"
         }
-    }
-    //Filter the unit tests to run
-    filter {
-        includeTestsMatching "de.tauber.*"
-    }
-    //Include/exclude test categories
-    useJUnit {
-    	includeCategories 'de.tauber.gradi.categories.UnitTests', \
-            'de.tauber.gradi.categories.IntegrationTests'
-    	excludeCategories 'de.tauber.gradi.categories.SmokeTests'
-    }
-}
+
+javadoc.options.addStringOption('Xdoclint:none', '-quiet')
 
 //Include a javadoc zip
-task javadocZip(type: Zip, dependsOn: javadoc) {
+tasks.register('javadocZip', Zip) {
+    dependsOn javadoc
     description 'Generate a javadoc zip file'
     group = 'Documentation'
-    classifier = 'javadoc'
     from javadoc.destinationDir
 }
 
@@ -149,19 +159,17 @@ artifacts {
 }
 
 //Generate a Maven pom for project
-task pom  {
+tasks.register('pom') {
     description 'Generates a Maven pom for project'
     group 'Distribution'
-    doLast{
+    doLast {
         pom {
-            project {
-                inceptionYear '2014'
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
-                    }
+            inceptionYear '2014'
+            licenses {
+                license {
+                    name = "The Apache Software License, Version 2.0"
+                    url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
                 }
             }
         }.writeTo('pom.xml')
@@ -183,16 +191,17 @@ checkstyle {
 }
 
 //Task to create html pages for checkstyle reports
-task checkstyleHtml(dependsOn: ['checkstyleMain', 'checkstyleTest']) {
+tasks.register('checkstyleHtml') {
+    dependsOn = ['checkstyleMain', 'checkstyleTest']
     description = 'Generates Checkstyle html reports'
     group = 'Verification'
-    doLast{
+    doLast {
         ant.xslt(in: checkstyleMain.reports.xml.destination,
-            style: file("$project.projectDir/config/checkstyle/checkstyle-noframes-sorted.xsl"),
-            out: new File(checkstyleMain.reports.xml.destination.parent, 'main.html'))
+                style: file("$project.projectDir/config/checkstyle/checkstyle-noframes-sorted.xsl"),
+                out: new File(checkstyleMain.reports.xml.destination.parent, 'main.html'))
         ant.xslt(in: checkstyleTest.reports.xml.destination,
-            style: file("$project.projectDir/config/checkstyle/checkstyle-noframes-sorted.xsl"),
-            out: new File(checkstyleTest.reports.xml.destination.parent, 'test.html'))
+                style: file("$project.projectDir/config/checkstyle/checkstyle-noframes-sorted.xsl"),
+                out: new File(checkstyleTest.reports.xml.destination.parent, 'test.html'))
     }
 }
 
@@ -200,85 +209,51 @@ task checkstyleHtml(dependsOn: ['checkstyleMain', 'checkstyleTest']) {
 pmdMain.onlyIf { project.hasProperty('runChecks') }
 pmdTest.onlyIf { project.hasProperty('runChecks') }
 
-tasks.withType(Pmd) {
+tasks.withType(Pmd).configureEach {
     reports {
-        html {
-            enabled true
-        }
-        xml {
-            enabled true
-        }
+        html.required = true
+        xml.required = true
     }
 }
 
 pmd {
     ignoreFailures = true
-    sourceSets = [sourceSets.main,sourceSets.test]
+    sourceSets = [sourceSets.main, sourceSets.test]
     reportsDir = file("$project.buildDir/reports/pmd")
-    ruleSetFiles = files("$project.projectDir/config/pmd/java/errorprone.xml","$project.projectDir/config/pmd/java/security.xml")
+    ruleSetFiles = files("$project.projectDir/config/pmd/java/errorprone.xml", "$project.projectDir/config/pmd/java/security.xml")
     ruleSets = []
 }
 
-//spotbugsMain.onlyIf { project.hasProperty('runChecks') }
-
-
-spotbugs  {
-    ignoreFailures = true
-    effort = 'max'
-    reportLevel = 'high'
-
-}
-
-//Jacoco Configuration
-//Generate Java Code Coverage artefacts with tests1
-test {
-    jacoco {
-        destinationFile = file("$project.buildDir/jacoco/jacocoTest.exec")
-        classDumpDir = file("$project.buildDir/jacoco/classpathdumps")
-    }
-}
 
 jacoco {
-    reportsDir = file("$project.buildDir/reports/jacoco")
+    reportsDirectory = layout.buildDirectory.dir('jacocoReports')
 }
 
 jacocoTestReport {
-    description = 'Generate Jacoco coverage reports after running tests.'
-    group = 'Reporting'
     reports {
-        xml{
-            enabled true
-            //destination "${project.buildDir}/reports/jacoco/jacoco.xml"
-        }
-        csv.enabled false
-        html{
-            enabled true
-            //destination "${project.buildDir}/reports/jacoco"
-        }
+        html.required = true
     }
-    //sourceDirectories = files(sourceSets.main.allSource.srcDirs)
-    //classDirectories = files(sourceSets.main.output.classesDir)
-
-    //additionalSourceDirs = files(['test/java', 'src/java-test'])
-    //additionalClassDirs = files(['build/jacoco/UT/classpathdumps/com/abc/xyz', 'build/jacoco/IT/classpathdumps/com/abc/xyz'])
-
-    //sourceDirectories = files('src/main/java')
-    //classDirectories = files('build/classes/main')
-
-    //sourceDirectories = fileTree('src/main/java')
-    //classDirectories = fileTree('build/classes/main')
 }
 
-task listTasks {
+if (project.hasProperty('runChecks')) {
+    spotbugs {
+        ignoreFailures = true
+        effort = 'max'
+        reportLevel = 'high'
+    }
+}
+
+
+tasks.register('listTasks') {
     doLast {
         description = 'List available gradle Tasks'
         group = 'Information'
-        tasks.each { task -> println(task.name + ": " + task.description)}
+        tasks.each { task -> println(task.name + ": " + task.description) }
     }
 }
 
 //Tasks providing project information
-task listConfigurations  {
+tasks.register('listConfigurations') {
     doLast {
         description = 'List available gradle Configurations'
         group = 'Information'
@@ -288,7 +263,7 @@ task listConfigurations  {
 }
 
 //Tasks providing project information
-task listSourceSets {
+tasks.register('listSourceSets') {
     doLast {
         description = 'List available gradle SourceSets'
         group = 'Information'
@@ -296,7 +271,7 @@ task listSourceSets {
     }
 }
 
-task listDependencies {
+tasks.register('listDependencies') {
     doLast {
         description = 'List all dependencies for testRuntime configuration'
         group = 'Information'
@@ -306,7 +281,7 @@ task listDependencies {
     }
 }
 
-task listFilenames {
+tasks.register('listFilenames') {
     doLast {
         description = 'List filename of jars used by testRuntime'
         group = 'Information'
