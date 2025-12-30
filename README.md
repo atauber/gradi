@@ -16,8 +16,6 @@ A playground project for exploring Contexts and Dependency Injection (CDI) conce
 - **Code Quality**: Configured with Checkstyle, FindBugs, and PMD for static analysis.
 - **Build Tool**: Gradle with custom tasks and plugins.
 
-test
-
 ## Project Structure
 
 - `src/main/java`: Main source code
