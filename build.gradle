@@ -20,8 +20,8 @@ defaultTasks 'build', 'htmlDependencyReport', 'jacocoTestReport'
 
 java {
     //OWB 4.0.0 does not support Java 21
-    sourceCompatibility = 20
-    targetCompatibility = 20
+    sourceCompatibility = 21
+    targetCompatibility = 21
 }
 
 println("group: " + group + ", project.name: " + project.name + ", version: " + version)
@@ -36,52 +36,67 @@ ext {
 repositories {
     mavenCentral()
     maven {
-        url 'https://repository.apache.org/content/groups/snapshots'
+        url = 'https://repository.apache.org/content/groups/snapshots'
     }
 }
 
 configurations {
     owbTestRuntime {
-        description 'Provides owb runtime to tests'
+        description = 'Provides owb runtime to tests'
+    }
+    weldTestRuntime {
+        description = 'Provides weld runtime to tests'
     }
     testRuntimeOnly {
-        description 'Customized runtime for unit tests'
-        extendsFrom testImplementation, owbTestRuntime
-        //extendsFrom testCompile, weldTestRuntime
+        description = 'Customized runtime for unit tests'
+        //extendsFrom testImplementation, owbTestRuntime
+        extendsFrom testImplementation, weldTestRuntime
     }
 }
 
 dependencies {
     //CDI API
-    implementation group: 'jakarta.enterprise', name: 'jakarta.enterprise.cdi-api', version: cdiVersion
-    implementation group: 'org.apache.openwebbeans', name: 'openwebbeans-se', version: owbVersion
+    implementation 'jakarta.enterprise:jakarta.enterprise.cdi-api:4.1.0'
+    implementation 'org.apache.openwebbeans:openwebbeans-se:4.0.3'
 
     //Bean Validation
-    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: beanValidationVersion
-    testRuntimeOnly group: 'org.apache.bval', name: 'org.apache.bval.bundle', version: bvalVersion
-    testRuntimeOnly group: 'org.apache.commons', name: 'commons-lang3', version: commonsLang3Version
+    implementation 'jakarta.validation:jakarta.validation-api:3.1.1'
+    testRuntimeOnly 'org.apache.bval:org.apache.bval.bundle:3.0.2'
+    testRuntimeOnly 'org.apache.commons:commons-lang3:3.20.0'
 
     //Logging with slf4j
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
-
+    implementation 'org.slf4j:slf4j-api:2.0.17'
+    implementation 'org.slf4j:slf4j-simple:2.0.17'
+    
     //Unit testing
-    testImplementation group: 'junit', name: 'junit', version: junitVersion
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: assertjVersion
-    testImplementation group: 'org.mockito', name: 'mockito-all', version: mockitoVersion
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.assertj:assertj-core:3.27.3'
+    testImplementation 'org.mockito:mockito-all:1.10.19'
 
     //Apache Deltaspike CdiCtrl
-    testImplementation group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-api', version: deltaspikeVersion
-    testRuntimeOnly group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion
-    testRuntimeOnly group: 'org.apache.deltaspike.core', name: 'deltaspike-core-impl', version: deltaspikeVersion
+    testImplementation 'org.apache.deltaspike.modules:deltaspike-test-control-module-api:2.0.1'
+    testRuntimeOnly 'org.apache.deltaspike.modules:deltaspike-test-control-module-impl:2.0.1'
+    testRuntimeOnly 'org.apache.deltaspike.core:deltaspike-core-impl:2.0.1'
 
     //Apache OpenWebbeans CDI Container
-    owbTestRuntime group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion
-    owbTestRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: owbVersion
-    owbTestRuntime group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: owbVersion
+    owbTestRuntime 'org.apache.deltaspike.cdictrl:deltaspike-cdictrl-owb:2.0.1'
+    owbTestRuntime 'org.apache.openwebbeans:openwebbeans-spi:4.0.3'
+    owbTestRuntime 'org.apache.openwebbeans:openwebbeans-impl:4.0.3'
 
-    //Annotations Api needed with Apache OpenWebBeans 1.5.0
-    owbTestRuntime group: 'jakarta.annotation', name: 'jakarta.annotation-api', version: annotationsVersion
+    //Jakarta Annotations
+    owbTestRuntime 'jakarta.annotation:jakarta.annotation-api:3.0.0'
+
+    //JBoss Weld CDI Container
+    weldTestRuntime 'org.apache.deltaspike.cdictrl:deltaspike-cdictrl-weld:2.0.1'
+    weldTestRuntime 'org.jboss.weld.se:weld-se-shaded:6.0.2.Final'
+
+    //MyFaces + Servlet API needed for clean test run with weld
+    //weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl-test', version: myfacesVersion
+    //weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl', version: myfacesVersion
+    //weldTestRuntime group: 'org.apache.myfaces.test', name: 'myfaces-test22', version: myfacesTest22Version
+    //weldTestRuntime group: 'javax.servlet', name: 'javax.servlet-api', version: servletApiVersion
+
+
 
 }
 
@@ -119,8 +134,12 @@ test
             doFirst {
                 copy {
                     from 'build/resources/main/META-INF/beans.xml'
-                    into 'build/classes/main/META-INF/'
+                    into 'build/classes/java/main/META-INF/'
                 }
+                copy {
+                    from 'build/resources/main/META-INF/beans.xml'
+                    into 'build/classes/META-INF/'
+                    }
             }
             //Filter the unit tests to run
             filter {
@@ -132,6 +151,18 @@ test
               'de.tauber.gradi.categories.IntegrationTests'
                 excludeCategories 'de.tauber.gradi.categories.SmokeTests'
             }
+
+            testLogging {
+                events "passed", "skipped", "failed"
+                //,"standardOut", "standardError"
+        
+                exceptionFormat = 'full'
+                showExceptions = true
+                showCauses = true
+                showStackTraces = true
+                showStandardStreams = false
+            }
+
             jvmArgs "--add-opens=java.base/java.lang=ALL-UNNAMED"
         }
 
@@ -140,18 +171,17 @@ javadoc.options.addStringOption('Xdoclint:none', '-quiet')
 //Include a javadoc zip
 tasks.register('javadocZip', Zip) {
     dependsOn javadoc
-    description 'Generate a javadoc zip file'
+    description = 'Generate a javadoc zip file'
     group = 'Documentation'
     from javadoc.destinationDir
 }
 
-artifacts {
-    archives javadocZip
+tasks.named("assemble") {
+    dependsOn('javadocZip')
 }
-
 //Generate a Maven pom for project
 tasks.register('pom') {
-    description 'Generates a Maven pom for project'
+    description = 'Generates a Maven pom for project'
     group 'Distribution'
     doLast {
         pom {
@@ -211,8 +241,7 @@ pmd {
     ignoreFailures = true
     sourceSets = [sourceSets.main, sourceSets.test]
     reportsDir = file("$project.buildDir/reports/pmd")
-    ruleSetFiles = files("$project.projectDir/config/pmd/java/errorprone.xml", "$project.projectDir/config/pmd/java/security.xml")
-    ruleSets = []
+    
 }
 
 
