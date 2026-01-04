@@ -70,7 +70,7 @@ dependencies {
     
     //Unit testing
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.assertj:assertj-core:3.27.3'
+    testImplementation 'org.assertj:assertj-core:3.27.6'
     testImplementation 'org.mockito:mockito-all:1.10.19'
 
     //Apache Deltaspike CdiCtrl
@@ -88,7 +88,7 @@ dependencies {
 
     //JBoss Weld CDI Container
     weldTestRuntime 'org.apache.deltaspike.cdictrl:deltaspike-cdictrl-weld:2.0.1'
-    weldTestRuntime 'org.jboss.weld.se:weld-se-shaded:6.0.2.Final'
+    weldTestRuntime 'org.jboss.weld.se:weld-se-shaded:6.0.3.Final'
 
     //MyFaces + Servlet API needed for clean test run with weld
     //weldTestRuntime group: 'org.apache.myfaces.core', name: 'myfaces-impl-test', version: myfacesVersion
