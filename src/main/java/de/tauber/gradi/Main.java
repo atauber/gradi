@@ -21,10 +21,6 @@ public final class Main {
     private Main() {
     }
 
-    /**
-     * CDI Container Lifecycle instance.
-     */
-    private static ContainerLifecycle lifecycle = null;
 
     /**
      * Main Method.
@@ -33,15 +29,23 @@ public final class Main {
      */
     public static void main(final String[] args) {
         RedirectLogging.configureJavaUtilLogging();
-        lifecycle = WebBeansContext.currentInstance().getService(ContainerLifecycle.class);
+        ContainerLifecycle lifecycle = WebBeansContext.currentInstance().getService(ContainerLifecycle.class);
         System.out.println("Starting application context");
         lifecycle.startApplication(null);
-        BeanManager beanManager = lifecycle.getBeanManager();
-        Set<Bean<?>> beans = beanManager.getBeans(MathService.class, DefaultLiteral.INSTANCE);
-        System.out.println("Count MathService: " + beans.size());
-        Bean<?> mathBean = beans.iterator().next();
-        MathService mathService = (MathService) beanManager.getReference(mathBean, MathService.class, beanManager.createCreationalContext(mathBean));
-        int adding = mathService.adding(3, 5);
-        System.out.println("Adding: " + adding);
+        try {
+            BeanManager beanManager = lifecycle.getBeanManager();
+            Set<Bean<?>> beans = beanManager.getBeans(MathService.class, DefaultLiteral.INSTANCE);
+            System.out.println("Count MathService: " + beans.size());
+            if (beans.isEmpty()) {
+                System.err.println("No MathService beans found");
+                return;
+            }
+            Bean<?> mathBean = beans.iterator().next();
+            MathService mathService = (MathService) beanManager.getReference(mathBean, MathService.class, beanManager.createCreationalContext(mathBean));
+            int adding = mathService.adding(3, 5);
+            System.out.println("Adding: " + adding);
+        } finally {
+            lifecycle.stopApplication(null);
+        }
     }
 }
