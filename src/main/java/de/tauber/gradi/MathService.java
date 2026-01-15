@@ -24,6 +24,18 @@ public class MathService {
     private SubstractService substract;
 
     /**
+     * Reference to MultiplyService.
+     */
+    @Inject
+    private MultiplyService multiply;
+
+    /**
+     * Reference to DivideService.
+     */
+    @Inject
+    private DivideService divide;
+
+    /**
      * Adds two numbers.
      *
      * @param operand1 first number
@@ -43,6 +55,28 @@ public class MathService {
      */
     public final int substracting(final int operand1, final int operand2) {
         return substract.substract(operand1, operand2);
+    }
+
+    /**
+     * Multiplies two numbers.
+     *
+     * @param operand1 first number
+     * @param operand2 second number
+     * @return product of the two numbers
+     */
+    public final int multiplying(final int operand1, final int operand2) {
+        return multiply.multiply(operand1, operand2);
+    }
+
+    /**
+     * Divides two numbers.
+     *
+     * @param operand1 first number
+     * @param operand2 second number
+     * @return quotient of the two numbers
+     */
+    public final int dividing(final int operand1, final int operand2) {
+        return divide.divide(operand1, operand2);
     }
 
     /**

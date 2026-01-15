@@ -21,7 +21,6 @@ public final class Main {
     private Main() {
     }
 
-
     /**
      * Main Method.
      *
@@ -41,9 +40,14 @@ public final class Main {
                 return;
             }
             Bean<?> mathBean = beans.iterator().next();
-            MathService mathService = (MathService) beanManager.getReference(mathBean, MathService.class, beanManager.createCreationalContext(mathBean));
+            MathService mathService = (MathService) beanManager.getReference(mathBean, MathService.class,
+                    beanManager.createCreationalContext(mathBean));
             int adding = mathService.adding(3, 5);
             System.out.println("Adding: " + adding);
+            int multiplying = mathService.multiplying(3, 5);
+            System.out.println("Multiplying: " + multiplying);
+            int dividing = mathService.dividing(10, 2);
+            System.out.println("Dividing: " + dividing);
         } finally {
             lifecycle.stopApplication(null);
         }

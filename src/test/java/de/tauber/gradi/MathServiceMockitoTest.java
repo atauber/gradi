@@ -45,6 +45,18 @@ public class MathServiceMockitoTest {
     private SubstractService substract;
 
     /**
+     * Mock for MultiplyService.
+     */
+    @Mock
+    private MultiplyService multiply;
+
+    /**
+     * Mock for DivideService.
+     */
+    @Mock
+    private DivideService divide;
+
+    /**
      * Inject the Mocks into MathService.
      */
     @InjectMocks
@@ -54,7 +66,6 @@ public class MathServiceMockitoTest {
      * 4711.
      */
     private static final int CONST4711 = 4711;
-
 
     /**
      * Setting up the test.
@@ -71,11 +82,11 @@ public class MathServiceMockitoTest {
      */
     @Test
     public void testAdding() {
-        //Setup
+        // Setup
         when(add.add(anyInt(), anyInt())).thenReturn(CONST4711);
-        //Execute
+        // Execute
         final int result = math.adding(2, 2);
-        //Verify
+        // Verify
         assertThat(result).isEqualTo(CONST4711);
         verify(add).add(2, 2);
     }
@@ -85,13 +96,41 @@ public class MathServiceMockitoTest {
      */
     @Test
     public void testSubstract() {
-        //Setup
+        // Setup
         when(substract.substract(anyInt(), anyInt())).thenReturn(CONST4711);
-        //Execute
+        // Execute
         final int result = substract.substract(2, 2);
-        //Verify
+        // Verify
         assertThat(result).isEqualTo(CONST4711);
         verify(substract).substract(2, 2);
+    }
+
+    /**
+     * We use the mock for MultiplyService.
+     */
+    @Test
+    public void testMultiplying() {
+        // Setup
+        when(multiply.multiply(anyInt(), anyInt())).thenReturn(CONST4711);
+        // Execute
+        final int result = math.multiplying(2, 2);
+        // Verify
+        assertThat(result).isEqualTo(CONST4711);
+        verify(multiply).multiply(2, 2);
+    }
+
+    /**
+     * We use the mock for DivideService.
+     */
+    @Test
+    public void testDividing() {
+        // Setup
+        when(divide.divide(anyInt(), anyInt())).thenReturn(CONST4711);
+        // Execute
+        final int result = math.dividing(2, 2);
+        // Verify
+        assertThat(result).isEqualTo(CONST4711);
+        verify(divide).divide(2, 2);
     }
 
     /**
@@ -99,14 +138,14 @@ public class MathServiceMockitoTest {
      */
     @Test
     public void testCalculate() {
-        //Setup
+        // Setup
         when(add.add(anyInt(), anyInt())).thenReturn(CONST4711);
         when(substract.substract(anyInt(), anyInt())).thenReturn(CONST4711);
-        //4711 + 4711 = 9422
-        //Execute
+        // 4711 + 4711 = 9422
+        // Execute
         final int result = math.calculate(2, 2);
         assertThat(result).isEqualTo(9422);
-        //Verify
+        // Verify
         verify(add).add(2, 2);
         verify(substract).substract(2, 2);
     }

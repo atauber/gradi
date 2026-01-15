@@ -27,7 +27,7 @@ public class MathServiceCdiTest {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(MathServiceMockitoTest.class);
 
-     /**
+    /**
      * Injects the math service.
      */
     @Inject
@@ -59,6 +59,24 @@ public class MathServiceCdiTest {
     public void testSubstracting() {
         final int result = math.substracting(4, 4);
         assertThat(result).isEqualTo(0);
+    }
+
+    /**
+     * Simple test for MathService multiplying method.
+     */
+    @Test
+    public void testMultiplying() {
+        final int result = math.multiplying(4, 4);
+        assertThat(result).isEqualTo(16);
+    }
+
+    /**
+     * Simple test for MathService dividing method.
+     */
+    @Test
+    public void testDividing() {
+        final int result = math.dividing(8, 4);
+        assertThat(result).isEqualTo(2);
     }
 
 }
