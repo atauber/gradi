@@ -20,9 +20,9 @@ defaultTasks 'build', 'htmlDependencyReport', 'jacocoTestReport'
 
 java {
     //OWB 4.0.0 does not support Java 21
-    sourceCompatibility = 25
-    targetCompatibility = 25
-    toolchain.languageVersion = JavaLanguageVersion.of(25)
+    sourceCompatibility = 21
+    targetCompatibility = 21
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
 }
 
 println("group: " + group + ", project.name: " + project.name + ", version: " + version)
